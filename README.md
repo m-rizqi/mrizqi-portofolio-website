@@ -25,7 +25,7 @@ CLAUDE.md            AI agent directive — read by Claude Code every session
 ## The workflow
 
 1. **Plan** (`docs/pra-development/`) — Start a chat with your AI agent: *"I want to build [app idea]. Read the templates in docs/pra-development/ and ask me questions to fill them out, starting from the PRD."* Work through the numbered sequence (1→8). Lock each doc once it's solid.
-2. **Build** (`docs/development/` + `source-codes/`) — The agent scaffolds code under `source-codes/`, keeps `1-TASK-CHECKLIST.md` and `2-CURRENT-STATE.md` current, and logs shortcuts in `3-TECH-DEBT-LOG.md`. Reuse `4-PROMPT-SNIPPETS.md` for consistent scaffolding prompts.
+2. **Build** (`docs/development/` + `source-codes/`) — driven by **GSD Core**: locked planning docs get ingested into `.planning/`, then each feature runs plan → execute (TDD, atomic commits) → generate tests → validate coverage (including error/red-path cases) → code review → verify. Shortcuts still get logged in `3-TECH-DEBT-LOG.md`; reuse `4-PROMPT-SNIPPETS.md` for consistent prompts. See `CLAUDE.md` for the exact command sequence.
 3. **Ship** (`docs/pasca-development/`) — Only after you confirm development is done: security audit → deployment guide → QA → handover doc.
 
 Design work (`docs/design/`) runs in parallel with planning/build whenever the project has a frontend.
@@ -41,7 +41,8 @@ Design work (`docs/design/`) runs in parallel with planning/build whenever the p
 
 This kit ships with a Claude Code config (`.claude/`) that includes:
 - **graphify** — turns this repo into a queryable knowledge graph (`graphify-out/`). Ask codebase questions and it queries the graph before falling back to raw file search.
-- Project rules (`.claude/rules/`) covering general programming, git workflow, backend/frontend/mobile standards, testing, error handling, AI behavior guardrails, and documentation.
+- **GSD Core** — the execution engine for the build phase: turns locked planning docs into a `.planning/` roadmap and drives each feature through plan → execute → test → validate → review → verify.
+- Project rules (`.claude/rules/`) covering general programming (incl. anti-over-engineering, comment discipline, file-size limits), git workflow, backend/frontend/mobile standards, testing (strict TDD + full use-case coverage), error handling, AI behavior guardrails, and documentation.
 - Several general-purpose plugins/skills (TDD, code review, design, browser testing, etc.) — see `CLAUDE.md` for which ones matter at which phase, and prune what you don't use.
 
 ## Known gaps
