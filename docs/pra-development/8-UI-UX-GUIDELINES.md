@@ -60,4 +60,4 @@
 
 ---
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the design system is fully defined and confirmed by the user, ask: *"The pre-development phase is complete. Should we now generate the **CLAUDE.md** core file, or define the task trackers in the **development** folder?"*
+> Once the design system is fully defined and confirmed by the user, ask: *"The pra-development phase is complete. Should we now generate the **CLAUDE.md** core file, or define the task trackers in the **development** folder?"*

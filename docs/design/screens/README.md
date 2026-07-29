@@ -11,7 +11,7 @@ When you place files here, you are instructing the AI to translate these exact v
 > If you are an AI assistant (especially a frontend, mobile, or `ui-ux-promax` agent), treat the files in this folder as the absolute visual blueprint.
 > 1. **Pixel-Perfect Replication:** Your generated UI code must match the screens provided here as closely as mathematically possible. 
 > 2. **No Unprompted Redesigns:** Do not hallucinate, invent, or alter the UI layout if a screen is provided here. Your job is to convert the image into code, not to redesign it.
-> 3. **Cross-Reference Constraints:** Combine the visual layouts found in these images with the strict mathematical variables (hex codes, font sizes, grid spacing) defined in `docs/pre-development/8-UI-UX-GUIDELINES-TEMPLATE.md`.
+> 3. **Cross-Reference Constraints:** Combine the visual layouts found in these images with the strict mathematical variables (hex codes, font sizes, grid spacing) defined in `docs/pra-development/8-UI-UX-GUIDELINES.md`.
 > 4. **Component Mapping:** Analyze the screens to identify reusable UI components (e.g., standard buttons, cards, text fields) before writing the screen-level code.
 
 ---

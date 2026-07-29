@@ -1,0 +1,222 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1785310283.3078275,
+    "ast_hash": "4841223c7ec874acd6e7a3ecae99cb1b",
+    "semantic_hash": "4841223c7ec874acd6e7a3ecae99cb1b"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1785310377.7541668,
+    "ast_hash": "077a8ddaaa5497969dbf0d04f754ab55",
+    "semantic_hash": "077a8ddaaa5497969dbf0d04f754ab55"
+  },
+  ".claude/CLAUDE.md": {
+    "mtime": 1785309548.2558682,
+    "ast_hash": "c232166e6492ba1ed955030b16979b05",
+    "semantic_hash": "c232166e6492ba1ed955030b16979b05"
+  },
+  ".claude/rules/01-general-programming.md": {
+    "mtime": 1785309152.014028,
+    "ast_hash": "b9f8c48645fd75ab5e9ddbf87e8c2b7f",
+    "semantic_hash": "b9f8c48645fd75ab5e9ddbf87e8c2b7f"
+  },
+  ".claude/rules/02-git-workflow.md": {
+    "mtime": 1785309190.9161422,
+    "ast_hash": "b010fe72c936fe6d9c3278dfc157c989",
+    "semantic_hash": "b010fe72c936fe6d9c3278dfc157c989"
+  },
+  ".claude/rules/03-backend-standards.md": {
+    "mtime": 1785309216.3833983,
+    "ast_hash": "0225b87e99080aa2c5163f6fe6f98d2d",
+    "semantic_hash": "0225b87e99080aa2c5163f6fe6f98d2d"
+  },
+  ".claude/rules/04-frontend-standards.md": {
+    "mtime": 1785309298.0540698,
+    "ast_hash": "9e2fb629d530642d6175ef99f4ed0f43",
+    "semantic_hash": "9e2fb629d530642d6175ef99f4ed0f43"
+  },
+  ".claude/rules/05-mobile-standards.md": {
+    "mtime": 1785309317.8581166,
+    "ast_hash": "bc77a39c81c2933fe446d5b9ceb8a181",
+    "semantic_hash": "bc77a39c81c2933fe446d5b9ceb8a181"
+  },
+  ".claude/rules/06-testing-standards.md": {
+    "mtime": 1785309338.1861794,
+    "ast_hash": "23dc2d2ffd60d4cc2be010acb8db7940",
+    "semantic_hash": "23dc2d2ffd60d4cc2be010acb8db7940"
+  },
+  ".claude/rules/07-error-handling.md": {
+    "mtime": 1785309397.6035128,
+    "ast_hash": "9f29d2fb9af97d1b39b47a43ab7b630e",
+    "semantic_hash": "9f29d2fb9af97d1b39b47a43ab7b630e"
+  },
+  ".claude/rules/08-ai-behavior-guardrails.md": {
+    "mtime": 1785309420.674493,
+    "ast_hash": "f011ebf8db8b96ce29436ec8180838b3",
+    "semantic_hash": "f011ebf8db8b96ce29436ec8180838b3"
+  },
+  ".claude/rules/09-documentation-standards.md": {
+    "mtime": 1785309436.9852488,
+    "ast_hash": "d8e5f4a66c4908fb953af3008fb7a223",
+    "semantic_hash": "d8e5f4a66c4908fb953af3008fb7a223"
+  },
+  ".claude/skills/graphify/SKILL.md": {
+    "mtime": 1785309548.2528608,
+    "ast_hash": "3100ca688a929fcc3aab9e30900a9dab",
+    "semantic_hash": "3100ca688a929fcc3aab9e30900a9dab"
+  },
+  ".claude/skills/graphify/references/add-watch.md": {
+    "mtime": 1784617982.1570077,
+    "ast_hash": "d59d027fe449f06aa03905a01184e779",
+    "semantic_hash": "d59d027fe449f06aa03905a01184e779"
+  },
+  ".claude/skills/graphify/references/exports.md": {
+    "mtime": 1784617982.1649544,
+    "ast_hash": "9da2a2152e60a22f07f05fed5158f287",
+    "semantic_hash": "9da2a2152e60a22f07f05fed5158f287"
+  },
+  ".claude/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1784617982.169321,
+    "ast_hash": "42fef56a01698118f7fd722acdadea34",
+    "semantic_hash": "42fef56a01698118f7fd722acdadea34"
+  },
+  ".claude/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1784617982.1788373,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": "cde13df085e4c492aeb7ba298a996d0d"
+  },
+  ".claude/skills/graphify/references/hooks.md": {
+    "mtime": 1784617982.1888635,
+    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
+    "semantic_hash": "3f545db6ce646650bb9de588f5512a27"
+  },
+  ".claude/skills/graphify/references/query.md": {
+    "mtime": 1784617982.2139597,
+    "ast_hash": "3c46f8ad006874260614ed8657d02307",
+    "semantic_hash": "3c46f8ad006874260614ed8657d02307"
+  },
+  ".claude/skills/graphify/references/transcribe.md": {
+    "mtime": 1784617982.2149599,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": "67b6a5fa6c0974e18f60db9f8932fbd8"
+  },
+  ".claude/skills/graphify/references/update.md": {
+    "mtime": 1784617982.2173264,
+    "ast_hash": "9378bd03d56baaf78bd738ab3848f142",
+    "semantic_hash": "9378bd03d56baaf78bd738ab3848f142"
+  },
+  ".claude/tdd-guard/data/instructions.md": {
+    "mtime": 1785309595.145246,
+    "ast_hash": "21e381f7db3b2e84efab864fc1df251f",
+    "semantic_hash": "21e381f7db3b2e84efab864fc1df251f"
+  },
+  "CLAUDE.md": {
+    "mtime": 1785309548.274933,
+    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
+    "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
+  },
+  "docs/design/references/README.md": {
+    "mtime": 1785307277.9571023,
+    "ast_hash": "799a810393df55ce269e13f945a85094",
+    "semantic_hash": "799a810393df55ce269e13f945a85094"
+  },
+  "docs/design/screens/README.md": {
+    "mtime": 1785307360.9169528,
+    "ast_hash": "0beb4cc3063b9b3811fcf235a1592724",
+    "semantic_hash": "0beb4cc3063b9b3811fcf235a1592724"
+  },
+  "docs/development/1-TASK-CHECKLIST.md": {
+    "mtime": 1785307709.9497552,
+    "ast_hash": "d7f01a3972d51ff7931295b60bc91234",
+    "semantic_hash": "d7f01a3972d51ff7931295b60bc91234"
+  },
+  "docs/development/2-CURRENT-STATE.md": {
+    "mtime": 1785307765.280072,
+    "ast_hash": "ae5d14347e178e1308cc665f7853993d",
+    "semantic_hash": "ae5d14347e178e1308cc665f7853993d"
+  },
+  "docs/development/3-TECH-DEBT-LOG.md": {
+    "mtime": 1785307801.6844501,
+    "ast_hash": "09ff7600224cdd38874290f9db8dc19b",
+    "semantic_hash": "09ff7600224cdd38874290f9db8dc19b"
+  },
+  "docs/development/4-PROMPT-SNIPPETS.md": {
+    "mtime": 1785307872.7146907,
+    "ast_hash": "18dd76afb202a26c61c473a2f0dfdfda",
+    "semantic_hash": "18dd76afb202a26c61c473a2f0dfdfda"
+  },
+  "docs/development/README.md": {
+    "mtime": 1785308018.2523673,
+    "ast_hash": "256b7c0f0ac30603e08dbd1fac825a1c",
+    "semantic_hash": "256b7c0f0ac30603e08dbd1fac825a1c"
+  },
+  "docs/pasca-development/1-SECURITY-CHECKLIST.md": {
+    "mtime": 1785308320.1149673,
+    "ast_hash": "0b1305d3a90c0219ba99aefe39e000b6",
+    "semantic_hash": "0b1305d3a90c0219ba99aefe39e000b6"
+  },
+  "docs/pasca-development/2-DEPLOYMENT-GUIDE.md": {
+    "mtime": 1785308424.2195144,
+    "ast_hash": "462d96b9793752b19797560988b7a2d2",
+    "semantic_hash": "462d96b9793752b19797560988b7a2d2"
+  },
+  "docs/pasca-development/3-TESTING-QA.md": {
+    "mtime": 1785308796.706309,
+    "ast_hash": "7d7cf29f7b0c8e289bccbf1385441be7",
+    "semantic_hash": "7d7cf29f7b0c8e289bccbf1385441be7"
+  },
+  "docs/pasca-development/4-HANDOVER-DOC-TEMPLATE.md": {
+    "mtime": 1785308588.7258961,
+    "ast_hash": "20eeffbff79600260b31398e7118d1a0",
+    "semantic_hash": "20eeffbff79600260b31398e7118d1a0"
+  },
+  "docs/pasca-development/README.md": {
+    "mtime": 1785308808.2320158,
+    "ast_hash": "2e08c839f85b978691eb60d6eba84619",
+    "semantic_hash": "2e08c839f85b978691eb60d6eba84619"
+  },
+  "docs/pra-development/1-BMC-OPTIONAL.md": {
+    "mtime": 1785307498.881736,
+    "ast_hash": "51255817c761417b96e31740f9a75d9d",
+    "semantic_hash": "51255817c761417b96e31740f9a75d9d"
+  },
+  "docs/pra-development/2-BRD-OPTIONAL.md": {
+    "mtime": 1785307511.2123926,
+    "ast_hash": "ec9454b0959d04c88d0f095f9a2cc588",
+    "semantic_hash": "ec9454b0959d04c88d0f095f9a2cc588"
+  },
+  "docs/pra-development/3-PRD.md": {
+    "mtime": 1785307520.4198635,
+    "ast_hash": "298e7a851807a212b4f7bc716d3a2abb",
+    "semantic_hash": "298e7a851807a212b4f7bc716d3a2abb"
+  },
+  "docs/pra-development/4-ARCHITECTURE.md": {
+    "mtime": 1785307530.170033,
+    "ast_hash": "d64d26c1817df38c23aa6553cb486029",
+    "semantic_hash": "d64d26c1817df38c23aa6553cb486029"
+  },
+  "docs/pra-development/5-ERD.md": {
+    "mtime": 1785307538.4857607,
+    "ast_hash": "8801b77def390223f960f4c2e1279e87",
+    "semantic_hash": "8801b77def390223f960f4c2e1279e87"
+  },
+  "docs/pra-development/6-API-CONTRACT.md": {
+    "mtime": 1785307545.2810707,
+    "ast_hash": "08a6a7005681959fb0b32a0ae0604034",
+    "semantic_hash": "08a6a7005681959fb0b32a0ae0604034"
+  },
+  "docs/pra-development/7-USER-FLOW.md": {
+    "mtime": 1785307549.6678996,
+    "ast_hash": "d24d4a33ae79f41bdd796bf190957bfb",
+    "semantic_hash": "d24d4a33ae79f41bdd796bf190957bfb"
+  },
+  "docs/pra-development/8-UI-UX-GUIDELINES.md": {
+    "mtime": 1785307032.870661,
+    "ast_hash": "b1b22c119d91d5aaa2e6981e2ba6804e",
+    "semantic_hash": "b1b22c119d91d5aaa2e6981e2ba6804e"
+  },
+  "docs/pra-development/README.md": {
+    "mtime": 1785308090.156686,
+    "ast_hash": "24499feff2d5651397f21c1b9ae6992a",
+    "semantic_hash": "24499feff2d5651397f21c1b9ae6992a"
+  }
+}

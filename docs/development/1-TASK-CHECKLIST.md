@@ -4,7 +4,7 @@
 > This document tracks the implementation progress of the project based on the PRD and Architecture documents.
 > 1. **Granularity is Key:** Always break down high-level tasks into smaller, actionable subtasks. Do not check off a main parent task until ALL its subtasks are completed `[x]`.
 > 2. **Continuous Updates:** Update this file ONLY AFTER the code for that specific subtask has been written, integrated, and verified.
-> 3. **Sync with PRD:** The features listed in Phase 3 must directly match the User Stories in `docs/pre-development/3-PRD.md`.
+> 3. **Sync with PRD:** The features listed in Phase 3 must directly match the User Stories in `docs/pra-development/3-PRD.md`.
 > 4. **Session Handoff:** At the end of a coding session, summarize what subtasks were checked off so the next session can resume seamlessly.
 
 ---

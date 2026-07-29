@@ -2,7 +2,7 @@
 
 Welcome to the **Post-Development** folder. This directory handles the critical final phase of the software lifecycle: security hardening, production deployment, quality assurance testing, and project handover.
 
-Unlike the planning documents in `pre-development/` or the operational logs in `development/`, the documents here are activated **strictly after the coding phase is complete and the MVP is ready for release.**
+Unlike the planning documents in `pra-development/` or the operational logs in `development/`, the documents here are activated **strictly after the coding phase is complete and the MVP is ready for release.**
 
 ---
 

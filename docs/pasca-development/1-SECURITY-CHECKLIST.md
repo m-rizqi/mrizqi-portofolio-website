@@ -2,7 +2,7 @@
 
 > **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
 > This document governs the security hardening phase of the project. As an AI agent, you must act as a Rigorous Security Auditor before authorizing any deployment.
-> 1. **Dynamic Generation:** Based on the technologies listed in `docs/pre-development/4-ARCHITECTURE.md` and endpoints in `docs/pre-development/6-API-CONTRACT.md`, you must define and tailor specific security checklist items for this project (do not rely solely on generic rules).
+> 1. **Dynamic Generation:** Based on the technologies listed in `docs/pra-development/4-ARCHITECTURE.md` and endpoints in `docs/pra-development/6-API-CONTRACT.md`, you must define and tailor specific security checklist items for this project (do not rely solely on generic rules).
 > 2. **Strict Enforcement:** Every security item below must be verified and checked off `[x]` before the app is cleared for production deployment.
 > 3. **Zero Hardcoding:** Ensure zero tolerance for hardcoded API keys, secrets, or database credentials.
 > 4. **Vulnerability Flagging:** If you detect a security flaw in the codebase during your review, stop immediately, log it here, and provide a secure patch.

@@ -2,7 +2,7 @@
 
 > **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
 > This document governs the testing and Quality Assurance (QA) phase prior to production release. As an AI agent, you must not use generic test scripts.
-> 1. **Feature-Driven Test Generation:** Analyze the `docs/pre-development/3-PRD.md` and user stories to dynamically generate specific User Acceptance Testing (UAT) test cases.
+> 1. **Feature-Driven Test Generation:** Analyze the `docs/pra-development/3-PRD.md` and user stories to dynamically generate specific User Acceptance Testing (UAT) test cases.
 > 2. **Edge Case Coverage:** Define test steps not only for "happy paths" (successful scenarios) but also for negative paths (errors, invalid inputs, network drops, and empty states).
 > 3. **Interactive Execution:** Guide the user or testing team step-by-step through manual or automated test scenarios and record the verification results.
 

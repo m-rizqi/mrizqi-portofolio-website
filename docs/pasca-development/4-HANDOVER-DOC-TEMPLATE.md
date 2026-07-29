@@ -1,7 +1,7 @@
 # 🤝 Project Handover Document & Operational Guide
 
 > **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document serves as the final project handover record. As an AI agent, you must dynamically generate and customize this guide based on the completed project structure, `docs/pre-development/3-PRD.md`, and `docs/pre-development/4-ARCHITECTURE.md`.
+> This document serves as the final project handover record. As an AI agent, you must dynamically generate and customize this guide based on the completed project structure, `docs/pra-development/3-PRD.md`, and `docs/pra-development/4-ARCHITECTURE.md`.
 > 1. **Context-Aware Summary:** Review all documentation and development artifacts to accurately summarize what was built, how it works, and where all components reside.
 > 2. **Interactive Information Gathering:** Ask the user for specific handover details if they are missing (e.g., repository links, production URLs, admin credential handover protocols, or support contact details).
 > 3. **Clarity and Completeness:** Ensure that the receiving party (client, new developer, or sysadmin) has everything they need to run, maintain, and scale the application without relying on external context.

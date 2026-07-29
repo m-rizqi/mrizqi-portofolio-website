@@ -2,7 +2,7 @@
 
 Welcome to the **Development** folder. This directory acts as the active operational control center for the project while code is being written. 
 
-Unlike the static planning documents in `pre-development/`, the files in this folder are **dynamic**. They change, update, and evolve in real-time as the application is built.
+Unlike the static planning documents in `pra-development/`, the files in this folder are **dynamic**. They change, update, and evolve in real-time as the application is built.
 
 ---
 

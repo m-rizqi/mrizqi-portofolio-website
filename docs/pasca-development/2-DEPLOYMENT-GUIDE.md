@@ -2,7 +2,7 @@
 
 > **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
 > This document serves as the customized deployment blueprint for the project. As an AI agent, you must not give generic instructions. 
-> 1. **Context-Aware Generation:** Analyze the `docs/pre-development/4-ARCHITECTURE.md` and the final product structure. Tailor this deployment guide explicitly to the actual tech stack used (e.g., Docker, VPS, Vercel, Google Play Store, Apple App Store).
+> 1. **Context-Aware Generation:** Analyze the `docs/pra-development/4-ARCHITECTURE.md` and the final product structure. Tailor this deployment guide explicitly to the actual tech stack used (e.g., Docker, VPS, Vercel, Google Play Store, Apple App Store).
 > 2. **Interactive Environment Gathering:** Before generating the final deployment steps, ask the user for their target server specifications, hosting provider, or domain configurations if they are not yet defined.
 > 3. **Environment Security Check:** Remind the user and verify that all production `.env` variables are correctly configured and secured before any build or publish command is executed.
 > 4. **Step-by-Step Clarity:** Provide deterministic, copy-pasteable terminal commands and configuration blocks.

@@ -33,7 +33,7 @@
 * **Prompt Template:**
 ```text
 Act as a Senior Frontend UI/UX Developer and UI-UX-Promax agent. 
-Review the design requirements in docs/pre-development/8-UI-UX-GUIDELINES.md and any screens in docs/design/screens/. 
+Review the design requirements in docs/pra-development/8-UI-UX-GUIDELINES.md and any screens in docs/design/screens/. 
 Implement the UI code for [SCREEN_NAME] strictly using our design system (exact hex colors, typography weights, and 8pt spacing grid). 
 Ensure all touch targets are at least 48x48dp and implement proper loading/error states.
 

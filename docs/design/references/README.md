@@ -11,7 +11,7 @@ It is designed to hold moodboards, UI screenshots, competitor analyses, and aest
 > If you are an AI assistant (especially a frontend or UI/UX agent) reading this repository, use this folder to understand the visual context of the project.
 > 1. **Visual Analysis:** If you have vision capabilities, analyze the images provided in this folder to grasp the aesthetic (e.g., minimalist, brutalist, corporate, playful, dark mode).
 > 2. **Vibe Alignment:** Use these references to guide your CSS, Tailwind classes, or Flutter styling. For example, if the moodboard shows soft, rounded elements, ensure you use higher `border-radius` and soft shadows in your code.
-> 3. **Guideline Synergy:** Always combine the inspiration found here with the strict mathematical rules (colors, spacing, typography) defined in `docs/pre-development/8-UI-UX-GUIDELINES-TEMPLATE.md`. 
+> 3. **Guideline Synergy:** Always combine the inspiration found here with the strict mathematical rules (colors, spacing, typography) defined in `docs/pra-development/8-UI-UX-GUIDELINES.md`. 
 > 4. **Do Not Copy Blindly:** Use these files as *inspiration*, not as exact blueprints to clone, unless explicitly instructed by the user.
 
 ---
