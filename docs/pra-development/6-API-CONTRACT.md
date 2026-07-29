@@ -2,10 +2,10 @@
 
 > **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
 > This document defines the strict communication contract between the client (frontend/mobile) and the server (backend/API).
-> 1. **No Hallucinated Endpoints:** Only create endpoints that directly serve the features outlined in the `3-PRD-TEMPLATE.md`.
+> 1. **No Hallucinated Endpoints:** Only create endpoints that directly serve the features outlined in the `3-PRD.md`.
 > 2. **Strict Data Typing:** When generating code (e.g., Dart models, TypeScript DTOs), strictly follow the payload structures defined here. Do not add or guess fields.
 > 3. **Consistency:** Ensure all endpoints follow RESTful naming conventions and utilize the defined Standard Response Formats.
-> 4. **Clarification:** If the payload requires data that doesn't exist in the `5-ERD-TEMPLATE.md`, stop and alert the user about the missing database fields.
+> 4. **Clarification:** If the payload requires data that doesn't exist in the `5-ERD.md`, stop and alert the user about the missing database fields.
 
 ---
 
@@ -131,4 +131,4 @@
 ---
 
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once all endpoints are documented and approved by the user, ask: *"The backend data contract is established. Should we map out the visual screen transitions in **7-USER-FLOW-TEMPLATE.md**, or define the design system in **8-UI-UX-GUIDELINES-TEMPLATE.md**?"*
+> Once all endpoints are documented and approved by the user, ask: *"The backend data contract is established. Should we map out the visual screen transitions in **7-USER-FLOW.md**, or define the design system in **8-UI-UX-GUIDELINES.md**?"*

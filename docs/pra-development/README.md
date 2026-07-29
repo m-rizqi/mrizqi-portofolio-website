@@ -1,6 +1,6 @@
-# 📂 Pre-Development Phase (Vibecoding Foundations)
+# 📂 Pra-Development Phase (Vibecoding Foundations)
 
-Welcome to the **Pre-Development** folder. This directory contains the foundational documents required to execute a flawless *vibecoding* workflow. 
+Welcome to the **Pra-Development** folder. This directory contains the foundational documents required to execute a flawless *vibecoding* workflow. 
 
 In an AI-driven development environment, **context is everything**. Skipping this phase will lead to AI hallucinations, inconsistent code, and architecture spaghetti. These documents serve as the strict boundaries and instructions for both human developers and AI agents.
 
@@ -21,7 +21,7 @@ As the "Vibecoder" (Product Owner / Architect), your job is to guide the AI to f
 
 ### The Workflow:
 1. **Initialize the Conversation:** Start a new chat with your AI (e.g., in Claude Desktop or Cursor).
-2. **Command the AI:** Give the AI a prompt like: *"I want to build [App Idea]. Please read the templates in `docs/pre-development/` starting from the PRD, and ask me questions to fill them out one by one."*
+2. **Command the AI:** Give the AI a prompt like: *"I want to build [App Idea]. Please read the templates in `docs/pra-development/` starting from the PRD, and ask me questions to fill them out one by one."*
 3. **Iterate & Refine:** The AI will ask you questions. Answer them. The AI will generate the markdown content.
 4. **Save & Lock:** Once a document (e.g., the PRD) looks solid, save it in your project repository and remove the `-TEMPLATE` from the filename (e.g., rename `3-PRD-TEMPLATE.md` to `3-PRD.md`).
 5. **Proceed to Code:** Only move to the `development` folder once this phase is fully locked in.

@@ -56,4 +56,4 @@
 
 ---
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the PRD is complete and approved by the user, explicitly ask: *"The PRD is locked in. Should we define the technical structure in **4-ARCHITECTURE.md** next, or jump to **7-USER-FLOW-TEMPLATE.md** / **8-UI-UX-GUIDELINES-TEMPLATE.md** to plan the screens?"*
+> Once the PRD is complete and approved by the user, explicitly ask: *"The PRD is locked in. Should we define the technical structure in **4-ARCHITECTURE.md** next, or jump to **7-USER-FLOW.md** / **8-UI-UX-GUIDELINES.md** to plan the screens?"*

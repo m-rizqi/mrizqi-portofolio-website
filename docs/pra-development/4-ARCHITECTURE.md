@@ -81,4 +81,4 @@ graph TD
 ---
 
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the architecture is defined and approved, ask the user: *"The technical blueprint is ready. Should we proceed to define the data structures in **5-ERD-TEMPLATE.md**, define the endpoints in **6-API-CONTRACT-TEMPLATE.md**, or move to visual planning with **7-USER-FLOW-TEMPLATE.md**?"*
+> Once the architecture is defined and approved, ask the user: *"The technical blueprint is ready. Should we proceed to define the data structures in **5-ERD.md**, define the endpoints in **6-API-CONTRACT.md**, or move to visual planning with **7-USER-FLOW.md**?"*

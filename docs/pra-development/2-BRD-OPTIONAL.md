@@ -41,4 +41,4 @@
 
 ---
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the BRD is fully finalized and approved by the user, state: *"The business requirements are now set. We must now move to **3-PRD-TEMPLATE.md** to translate these business goals into actionable product features and user stories."*
+> Once the BRD is fully finalized and approved by the user, state: *"The business requirements are now set. We must now move to **3-PRD.md** to translate these business goals into actionable product features and user stories."*

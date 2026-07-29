@@ -64,4 +64,4 @@
 
 ---
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once this BMC is fully filled out and approved by the user, ask: *"The BMC is complete and solid. Shall we move on to drafting the **2-BRD-TEMPLATE-OPTIONAL.md**, or jump straight into the **3-PRD-TEMPLATE.md** to define the application's specific features?"*
+> Once this BMC is fully filled out and approved by the user, ask: *"The BMC is complete and solid. Shall we move on to drafting the **2-BRD-OPTIONAL.md**, or jump straight into the **3-PRD.md** to define the application's specific features?"*

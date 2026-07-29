@@ -69,4 +69,4 @@ graph TD
 ---
 
 > **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the User Flow is complete and verified against the PRD, ask the user: *"The navigation pathways are fully mapped. Shall we finalize the design system and aesthetic rules in **8-UI-UX-GUIDELINES-TEMPLATE.md**?"*
+> Once the User Flow is complete and verified against the PRD, ask the user: *"The navigation pathways are fully mapped. Shall we finalize the design system and aesthetic rules in **8-UI-UX-GUIDELINES.md**?"*
