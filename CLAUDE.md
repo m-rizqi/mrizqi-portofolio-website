@@ -2,6 +2,16 @@
 
 This repo is a **vibecoding starter kit**: docs-driven, three-phase lifecycle. Read this file first, every session, before touching code.
 
+## Current project status
+
+This instance of the kit builds **Muhammad Rizqi's portfolio website** — a 1:1 Next.js rebuild of the approved static design in `docs/design/mrizqi-portofolio-design/`. State as of the last session:
+
+* **`docs/pra-development/`** — **locked.** PRD, architecture, ERD/API-contract (N/A — no backend), user flow, and UI/UX guidelines are all filled from the real design and confirmed decisions. Don't re-run phase 1 discovery questions for this project; read `3-PRD.md` and `4-ARCHITECTURE.md` first instead.
+* **`source-codes/frontend/`** — built. Next.js 15 (App Router, TypeScript), all 5 pages ported and verified against the source design. `ai-service/`, `backend/`, `mobile/` are intentionally unused (no backend needed — see `4-ARCHITECTURE.md`).
+* **`docs/pasca-development/`** — drafted for a self-managed Ubuntu VPS (PM2 + Nginx + Certbot, domain `mrizqi.25hourslab.site`), with `.github/workflows/deploy.yml` handling CI (build check) and CD (auto-deploy to the VPS on push to `main`).
+
+For any new feature or content change: read `docs/development/2-CURRENT-STATE.md` first, then follow the manual phase-2 loop below (GSD Core stays disabled).
+
 ## The three phases (in order — never skip ahead)
 
 1. **`docs/pra-development/`** — planning. Do not write production code, scaffold folders, or install dependencies before `3-PRD.md` and `4-ARCHITECTURE.md` exist and are locked. Follow the numbered sequence (1→8). If a doc is still a `-TEMPLATE`, it isn't locked yet — keep asking questions instead of coding.
@@ -16,7 +26,7 @@ Each folder's own `README.md` carries the full AI directive for that phase — t
 
 ## Where code goes
 
-`source-codes/{ai-service,backend,frontend,mobile}/` — all empty. Scaffold only the services `4-ARCHITECTURE.md` actually calls for, not all four by default.
+`source-codes/{ai-service,backend,frontend,mobile}/` — scaffold only the services `4-ARCHITECTURE.md` actually calls for, not all four by default. For this project that's `frontend/` only (Next.js portfolio app); `ai-service/`, `backend/`, and `mobile/` stay empty — no backend/API/mobile client is needed for a static portfolio site.
 
 ## graphify
 

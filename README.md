@@ -1,52 +1,59 @@
-# 🧬 Vibecoding Starter Kit
+# Muhammad Rizqi — Portfolio Website
 
-A documentation-first scaffold for building software with an AI coding agent (Claude Code, Cursor, etc.) as the primary driver. Instead of jumping straight into code, this kit forces a **plan → build → ship** lifecycle through structured markdown docs that both you and the AI read before acting.
+Personal portfolio site for Muhammad Rizqi (Software Engineer — mobile, backend, and AI-assisted automation). Built with Next.js as a 1:1 rebuild of an approved static HTML/CSS/JS design, following this repo's docs-driven **plan → build → ship** lifecycle.
 
-The core idea: an AI agent without context hallucinates, invents architecture, and drifts. Fill out the planning docs once, and every future session — yours or the AI's — starts from the same source of truth.
+Live at: `https://mrizqi.25hourslab.site`
+
+## Tech stack
+
+* **Frontend:** Next.js 15 (App Router), React, TypeScript
+* **Styling:** Plain CSS (ported from the source design, no Tailwind/CSS-in-JS)
+* **Backend / DB:** None — fully static content, no API routes, no secrets
+* **Deployment:** Self-managed Ubuntu VPS — PM2 (process manager) + Nginx (reverse proxy) + Certbot (TLS), auto-deployed on push to `main` via GitHub Actions
+
+## Getting started
+
+```bash
+cd source-codes/frontend
+npm install
+npm run dev
+```
+
+Content (projects, blog posts, experience, skills) lives entirely in `source-codes/frontend/lib/data.ts` — edit there, no CMS needed. See `docs/pasca-development/4-HANDOVER-DOC-TEMPLATE.md` for the full content-editing guide.
 
 ## Folder structure
 
 ```
 docs/
-  pra-development/   1. Planning: PRD, architecture, ERD, API contract, user flow, UI/UX guidelines
-  design/            2. Visual references (moodboards) and finalized screens for frontend work
-  development/        3. Active build: task checklist, session memory, tech debt log, prompt snippets
-  pasca-development/ 4. Release: security checklist, deployment guide, QA, handover doc
+  pra-development/    1. Planning — PRD, architecture, ERD, API contract, user flow, UI/UX guidelines (LOCKED)
+  design/             2. Source design: docs/design/mrizqi-portofolio-design/ (the original static HTML/CSS/JS this app is ported from) + DESIGN.md
+  development/        3. Build tracking — task checklist, session memory, tech debt log, prompt snippets
+  pasca-development/  4. Release — security checklist, VPS deployment guide, QA results, handover doc
 source-codes/
-  ai-service/        Empty scaffold — populate only if the architecture doc calls for it
-  backend/
-  frontend/
-  mobile/
-.claude/             Claude Code project config: rules, skills, settings
-graphify-out/        Generated knowledge graph of this repo (see CLAUDE.md)
-CLAUDE.md            AI agent directive — read by Claude Code every session
+  frontend/           The Next.js app (see above) — everything else is unused for this project
+  ai-service/         Unused — not needed for a static portfolio site
+  backend/            Unused — no backend required (see docs/pra-development/4-ARCHITECTURE.md)
+  mobile/             Unused
+.github/workflows/    CI (build check) + CD (auto-deploy to VPS on push to main)
+.claude/              Claude Code project config: rules, skills, settings
+graphify-out/         Generated knowledge graph of this repo (see CLAUDE.md)
+CLAUDE.md             AI agent directive — read by Claude Code every session
 ```
 
-## The workflow
+## Project status
 
-1. **Plan** (`docs/pra-development/`) — Start a chat with your AI agent: *"I want to build [app idea]. Read the templates in docs/pra-development/ and ask me questions to fill them out, starting from the PRD."* Work through the numbered sequence (1→8). Lock each doc once it's solid.
-2. **Build** (`docs/development/` + `source-codes/`) — driven by **GSD Core**: locked planning docs get ingested into `.planning/`, then each feature runs plan → execute (TDD, atomic commits) → generate tests → validate coverage (including error/red-path cases) → code review → verify. Shortcuts still get logged in `3-TECH-DEBT-LOG.md`; reuse `4-PROMPT-SNIPPETS.md` for consistent prompts. See `CLAUDE.md` for the exact command sequence.
-3. **Ship** (`docs/pasca-development/`) — Only after you confirm development is done: security audit → deployment guide → QA → handover doc.
+* **`docs/pra-development/`** — locked. Product spec and architecture are final for this rebuild; see `docs/pra-development/3-PRD.md`.
+* **`docs/development/`** — MVP complete. All 5 pages (`/`, `/projects`, `/project`, `/blog`, `/post`) ported and verified against the source design.
+* **`docs/pasca-development/`** — deployment guide and security/QA docs written for the confirmed VPS + PM2 + Nginx setup.
 
-Design work (`docs/design/`) runs in parallel with planning/build whenever the project has a frontend.
+Any new feature work on this project should read `docs/development/2-CURRENT-STATE.md` first, then follow the manual GSD-disabled loop described in `CLAUDE.md`.
 
-## Getting started
+## CI/CD
 
-1. Clone this repo (or use it as a template).
-2. Open it in Claude Code — `CLAUDE.md` is read automatically and tells the agent how to navigate the phases.
-3. Say what you want to build and let the agent walk you through `docs/pra-development/` first. Don't let it skip to code.
-4. Fill in `.env` from `.env.example` once your architecture doc defines what secrets you need.
+`.github/workflows/deploy.yml`:
+* **build** — `npm ci && npm run build` on every push/PR touching `source-codes/frontend/**`.
+* **deploy** — on push to `main` only, after `build` passes: SSHes into the VPS and re-runs `git pull` → `npm install` → `npm run build` → `pm2 restart`. Requires `VPS_HOST` / `VPS_USERNAME` / `VPS_SSH_KEY` (+ optional `VPS_PORT`) repo secrets — see `docs/pasca-development/2-DEPLOYMENT-GUIDE.md` §6.
 
-## What's pre-wired
+## Docs-driven workflow (how this repo is organized)
 
-This kit ships with a Claude Code config (`.claude/`) that includes:
-- **graphify** — turns this repo into a queryable knowledge graph (`graphify-out/`). Ask codebase questions and it queries the graph before falling back to raw file search.
-- **GSD Core** — the execution engine for the build phase: turns locked planning docs into a `.planning/` roadmap and drives each feature through plan → execute → test → validate → review → verify.
-- Project rules (`.claude/rules/`) covering general programming (incl. anti-over-engineering, comment discipline, file-size limits), git workflow, backend/frontend/mobile standards, testing (strict TDD + full use-case coverage), error handling, AI behavior guardrails, and documentation.
-- Several general-purpose plugins/skills (TDD, code review, design, browser testing, etc.) — see `CLAUDE.md` for which ones matter at which phase, and prune what you don't use.
-
-## Known gaps
-
-- `source-codes/*` are empty placeholders — nothing to scaffold until an architecture doc exists.
-- Some `docs/` cross-references still point at an old `pre-development` folder name (should be `pra-development`) — treat those as typos until cleaned up.
-- `.claude/skills/` and `.agents/skills/` currently carry more skill packages than this template actually uses; trim to what your project needs.
+This repo follows a documentation-first lifecycle: plan in `docs/pra-development/` before writing code, build in `source-codes/` while tracking progress in `docs/development/`, and only move to `docs/pasca-development/` once development is confirmed done. `CLAUDE.md` is the full AI agent directive — read automatically by Claude Code every session — and explains which skills/commands apply at each phase (GSD Core is disabled for this project; the loop is run manually, see `CLAUDE.md`).
