@@ -160,3 +160,34 @@ The deploy step is idempotent (§7) — it clones the repo and starts PM2 on its
 * [ ] `pm2 status` shows `mrizqi-portfolio` as `online`.
 * [ ] `pm2 logs mrizqi-portfolio --lines 50` shows no startup errors.
 * [ ] Reboot the VPS once and confirm the app comes back automatically (`pm2 startup` + `pm2 save` did their job).
+
+## 🧯 9. Troubleshooting
+
+**`EADDRINUSE: address already in use :::3000`** (or whatever port) on `pm2` start/restart — something is already bound to that port, most often a duplicate/zombie PM2 process from an earlier `pm2 start` that was never cleaned up.
+```bash
+sudo lsof -i :3003          # or: sudo ss -tulpn | grep :3003
+pm2 list                    # look for a duplicate/errored mrizqi-portfolio entry
+pm2 delete all               # clean slate if duplicates are the cause
+pm2 start ecosystem.config.js
+pm2 save
+```
+
+**`Error: Could not find a production build in the '.next' directory`** on `pm2` start/restart — `npm run build` was skipped (or ran in the wrong directory) before starting/restarting PM2. `next start` only serves an already-built `.next` folder, it does not build on its own.
+```bash
+cd ~/mrizqi-portofolio-website/source-codes/frontend
+npm run build
+pm2 restart mrizqi-portfolio   # or: pm2 start ecosystem.config.js, if it isn't running at all
+pm2 save
+```
+
+**Migrating an already-running process to `ecosystem.config.js`** (e.g. it was started before this file existed, with a plain `pm2 start npm --name "mrizqi-portfolio" -- start`, or you're changing `PORT`) — `pm2 restart`/`pm2 startOrReload` alone won't retroactively adopt a process that was never started from the ecosystem file. Delete and recreate it once:
+```bash
+cd ~/mrizqi-portofolio-website/source-codes/frontend
+git pull
+pm2 delete mrizqi-portfolio
+npm install
+npm run build
+pm2 start ecosystem.config.js
+pm2 save
+```
+After this one-time switch, every later `pm2 startOrReload ecosystem.config.js` (including the one in `.github/workflows/deploy.yml`) correctly re-reads the file, so this migration step is only needed once.
