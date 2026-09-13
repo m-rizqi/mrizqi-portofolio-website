@@ -16,7 +16,7 @@
 graph LR
     Visitor -->|DNS: mrizqi.25hourslab.site| Cloudflare[Cloudflare DNS - grey cloud]
     Cloudflare -->|HTTPS 443, resolves straight to VPS IP| Nginx
-    Nginx -->|HTTP 127.0.0.1:3000| NextApp[Next.js - PM2 managed]
+    Nginx -->|HTTP 127.0.0.1:3003| NextApp[Next.js - PM2 managed]
     Certbot -.renews cert for.-> Nginx
 ```
 
@@ -42,7 +42,7 @@ sudo apt install -y certbot python3-certbot-nginx
 
 ## 📦 3. Deploying the App
 
-*Optional if you'd rather let CI do it:* the GitHub Actions `deploy` job (§7) is idempotent and can perform this exact clone → install → build → `pm2 start` sequence automatically on its first run, once §2 and the Nginx/TLS/DNS setup (§4–5) are done and the repo secrets (§7) are added. Run the steps below manually only if you want the app live before wiring up CI, or you prefer to control the first deploy by hand.
+*Optional if you'd rather let CI do it:* the GitHub Actions `deploy` job (§7) is idempotent and can perform this exact clone → install → build → `pm2 startOrReload` sequence automatically on its first run, once §2 and the Nginx/TLS/DNS setup (§4–5) are done and the repo secrets (§7) are added. Run the steps below manually only if you want the app live before wiring up CI, or you prefer to control the first deploy by hand.
 
 ```bash
 # 1. Clone the repo (or pull latest on redeploy)
@@ -55,8 +55,9 @@ npm install
 # 3. Build for production
 npm run build
 
-# 4. Start under PM2 (runs `next start`, defaults to port 3000)
-pm2 start npm --name "mrizqi-portfolio" -- start
+# 4. Start under PM2 using ecosystem.config.js (defines the process name and
+#    PORT — currently 3003, must match the Nginx proxy_pass in §5)
+pm2 start ecosystem.config.js
 
 # 5. Persist PM2 across reboots
 pm2 save
@@ -70,8 +71,10 @@ cd ~/mrizqi-portofolio-website/source-codes/frontend
 git pull
 npm install
 npm run build
-pm2 restart mrizqi-portfolio
+pm2 startOrReload ecosystem.config.js
 ```
+
+`pm2 startOrReload` starts the process if it isn't running yet, or reloads it (re-reading `ecosystem.config.js`, including `PORT`) if it already is — so a port change made in that file takes effect on the next redeploy without any extra manual step. Changing the port later: edit `PORT` in `source-codes/frontend/ecosystem.config.js`, then also update the Nginx `proxy_pass` in §5 to match.
 
 ## ☁️ 4. Cloudflare DNS Setup
 
@@ -99,7 +102,7 @@ server {
     server_name mrizqi.25hourslab.site;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3003;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -136,7 +139,7 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 `.github/workflows/deploy.yml` runs on push/PR to `main`/`dev`, scoped to changes under `source-codes/frontend/**` (this repo has no other deployable service, so a docs-only or backend-scaffold commit never triggers a build/deploy):
 
 * **`build` job** (always) — `npm ci && npm run build` in `source-codes/frontend`, catches type/lint/build errors before merge.
-* **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs an **idempotent** version of the §3 sequence: clones the repo if it isn't there yet, otherwise pulls; `npm install` + `npm run build`; then `pm2 restart mrizqi-portfolio` if that process already exists, otherwise `pm2 start` it fresh. This means **the very first deploy can also go through this workflow** — you don't have to manually run the §3 clone/build/pm2-start steps yourself, as long as §2 (Node/PM2/Nginx/Certbot installed) and §4–5 (DNS + Nginx + TLS cert) are already done.
+* **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs an **idempotent** version of the §3 sequence: clones the repo if it isn't there yet, otherwise pulls; `npm install` + `npm run build`; then `pm2 startOrReload ecosystem.config.js`, which starts the process fresh if it doesn't exist yet, or reloads it (re-reading `ecosystem.config.js`, including `PORT`) if it does. This means **the very first deploy can also go through this workflow**, and a future port change in `ecosystem.config.js` takes effect on the next redeploy with no manual VPS step — you don't have to SSH in yourself for either case, as long as §2 (Node/PM2/Nginx/Certbot installed) and §4–5 (DNS + Nginx + TLS cert, matching the port in `ecosystem.config.js`) are already done.
 * **What auto-deploy does *not* cover:** installing Node/PM2/Nginx/Certbot (§2), the Nginx site config and TLS certificate (§5), and the Cloudflare DNS record (§4). Those need `sudo` and are one-time infrastructure setup — intentionally kept manual so the CI deploy SSH user only needs permission to `git`, `npm`, and `pm2` in its own home directory, not root.
 
 **One-time setup — add these as GitHub repo secrets** (`Settings → Secrets and variables → Actions → New repository secret`):
@@ -144,11 +147,11 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 | Secret | Value |
 |---|---|
 | `VPS_HOST` | VPS IP address or hostname |
-| `VPS_USERNAME` | SSH user with permission to `git pull`, run `npm`, and `pm2 restart` in `~/mrizqi-portofolio-website` |
-| `VPS_SSH_KEY` | Private key (PEM) for that user — generate a **dedicated deploy key** (`ssh-keygen -t ed25519 -f deploy_key -N ""`), add `deploy_key.pub` to the VPS user's `~/.ssh/authorized_keys`, and paste the contents of the private `deploy_key` file here. Never reuse your personal SSH key. |
+| `VPS_USERNAME` | SSH user with permission to `git`, `npm`, and `pm2` in `~/mrizqi-portofolio-website` |
+| `VPS_SSH_KEY` | Private key (PEM) for that user — generate a **dedicated deploy key outside this repo** (e.g. `ssh-keygen -t ed25519 -f ~/.ssh/mrizqi_deploy_key -N ""` — never inside the working copy, so it can't accidentally get staged/committed), add the `.pub` file's contents to the VPS user's `~/.ssh/authorized_keys`, and paste the *private* key's contents here. Never reuse your personal SSH key, and never paste key contents into a chat/terminal you don't control — treat it as compromised the moment it's been displayed anywhere outside the two files themselves. |
 | `VPS_PORT` | *(optional)* SSH port, defaults to `22` if unset |
 
-The deploy step assumes the repo is already cloned at `~/mrizqi-portofolio-website` on the VPS (§3 step 1) and that `pm2 start npm --name "mrizqi-portfolio" -- start` has been run at least once, so `pm2 restart` has a process to target.
+The deploy step is idempotent (§7) — it clones the repo and starts PM2 on its own if this is the first run, so nothing needs to be pre-provisioned on the VPS beyond §2 (Node/PM2/Nginx/Certbot) and §4–5 (DNS + Nginx + TLS cert).
 
 ## ✅ 8. Post-Deploy Verification
 

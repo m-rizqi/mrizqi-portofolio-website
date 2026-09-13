@@ -55,9 +55,12 @@ jobs:
       # docs/pasca-development/1-SECURITY-CHECKLIST.md. Nothing to copy onto
       # the VPS beyond the source code itself.
       #
-      # Idempotent: clones the repo and starts the PM2 process if this is the
-      # first run on a fresh VPS, otherwise just pulls + restarts. Node.js,
-      # PM2, Nginx, Certbot, the Nginx site config, and the TLS cert are NOT
+      # Idempotent: clones the repo if this is the first run on a fresh VPS,
+      # otherwise just pulls. `pm2 startOrReload` starts the process if it
+      # doesn't exist yet, or reloads it (re-reading ecosystem.config.js —
+      # including the PORT) if it does, so a port change in that file takes
+      # effect on the very next deploy with no manual VPS step. Node.js, PM2,
+      # Nginx, Certbot, the Nginx site config, and the TLS cert are NOT
       # provisioned here — those are one-time, sudo-requiring steps done
       # manually (docs/pasca-development/2-DEPLOYMENT-GUIDE.md §2-5). The
       # deploy SSH user intentionally does not need sudo for this script.
@@ -81,9 +84,5 @@ jobs:
             cd source-codes/frontend
             npm install
             npm run build
-            if pm2 describe mrizqi-portfolio > /dev/null 2>&1; then
-              pm2 restart mrizqi-portfolio
-            else
-              pm2 start npm --name "mrizqi-portfolio" -- start
-              pm2 save
-            fi
+            pm2 startOrReload ecosystem.config.js
+            pm2 save
