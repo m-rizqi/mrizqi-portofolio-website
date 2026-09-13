@@ -9,8 +9,7 @@
 ---
 
 ## 📄 1. Executive Summary
-*Provide a brief overview of what this project is, why it is being undertaken, and the primary business problem it solves.*
-* [ ] 
+*Skipped* — personal portfolio site, not a business initiative with KPIs/budget. See `3-PRD.md` (locked) for the actual product spec: rebuilding the existing static design as a Next.js app.
 
 ## 🎯 2. Business Objectives & Success Metrics (KPIs)
 *What are the measurable goals of this project? How will we know if it is a success? (e.g., Acquire 10,000 users in Q3, reduce manual workflow time by 50%, generate $5k MRR).*

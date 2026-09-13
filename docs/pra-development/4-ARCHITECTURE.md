@@ -1,84 +1,87 @@
 # System Architecture & Technical Specifications
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document is the ultimate technical blueprint. Before writing any code, generating project structures, or installing dependencies, you MUST consult this document.
-> 1. **Strict Adherence:** Do not deviate from the Tech Stack, State Management, or Folder Structure defined here. If a required feature cannot be implemented with the listed stack, **STOP and ask the user** for permission to add a new library.
-> 2. **No Hallucinated Imports:** Only use packages and architectural patterns explicitly approved in this document.
-> 3. **Diagrams:** Use Mermaid.js for system architecture and data flow visualizations. It helps both the user and the AI maintain a clear mental model.
+> **Status: LOCKED** — confirmed with the user: TypeScript, Next.js App Router. Styling ports the source `css/styles.css` near-verbatim as global CSS (not Tailwind) to guarantee pixel fidelity with the source design, per the PRD's "copy exactly" requirement.
 
 ---
 
 ## 🏗 1. High-Level System Overview
-*Describe how the major components (Client, Server, Database, Third-Party APIs) interact. Use a Mermaid.js diagram for clarity.*
 
 ```mermaid
 graph TD
-    Client[Client App] -->|HTTPS / REST| API[API Gateway]
-    API --> Auth[Authentication Service]
-    API --> Core[Core Microservice]
-    Core --> DB[(Primary Database)]
-    Core --> External[External Services / n8n]
-
+    Visitor[Visitor Browser] -->|HTTPS| Next[Next.js App - Static/SSG]
+    Next --> Data[lib/data.ts - static content module]
+    Next --> Fonts[Google Fonts - link tags]
+    Next --> Assets[public/assets - photo.jpg, CV pdf]
 ```
 
-*(Edit the Mermaid diagram above to reflect the actual system architecture).*
+No API layer, no database, no auth — content is compiled into the app from a static TypeScript module, same role as the source's `js/data.js`.
 
 ## ⚙️ 2. Tech Stack & Dependencies
 
-*Define the exact technologies, frameworks, and critical packages to prevent the AI from using deprecated or incompatible libraries.*
-
-* **Core Framework:** [e.g., Flutter / React Native / Next.js]
-* **Language:** [e.g., Dart 3.x / TypeScript]
-* **State Management:** [e.g., BLoC / Redux / Zustand]
-* **Routing/Navigation:** [e.g., GoRouter / React Router]
-* **Network / API Client:** [e.g., Dio / Axios / RTK Query]
-* **Local Storage / Caching:** [e.g., Hive / SharedPreferences / SQLite]
-* **Styling / UI Library:** [e.g., TailwindCSS / Material 3 / Custom Design System]
+* **Core Framework:** Next.js (latest stable, App Router)
+* **Language:** TypeScript
+* **State Management:** Local React state only (`useState`/`useEffect`) for filters and accordion — no Redux/Zustand, matches the source's plain-JS DOM state.
+* **Routing/Navigation:** Next.js App Router file-based routing. Detail pages keep the source's **query-string** pattern (`?p=<slug>`) instead of dynamic segments, to preserve the exact URL/behavior contract documented in `docs/design/mrizqi-portofolio-design/DESIGN.md` ("reads `?p=<slug>`").
+* **Network / API Client:** None — no fetch/axios, all data is imported directly from `lib/data.ts`.
+* **Local Storage / Caching:** None.
+* **Styling / UI Library:** Plain CSS, ported from the source `css/styles.css` into `app/globals.css` with class names preserved. No Tailwind, no CSS-in-JS, no component library — matches source 1:1.
 
 ## 📁 3. Project Directory Structure
 
-*Define the exact folder structure so the AI agent knows exactly where to place new files (e.g., Feature-First approach or Domain-Driven Design).*
-
 ```text
-/src (or /lib)
- ├── /core           # Base classes, theme, constants, extensions
- ├── /config         # Environment variables, routing setup, theme config
- ├── /features       # Feature-first modules
- │    ├── /auth      # Example feature
- │    │    ├── /data         # Repositories, models, API data sources
- │    │    ├── /domain       # Entities, use cases
- │    │    └── /presentation # UI, widgets, state (BLoC/Controllers)
- ├── /shared         # Reusable UI components (buttons, text fields)
- └── main            # App entry point
-
+source-codes/frontend/
+ ├── app/
+ │    ├── layout.tsx          # <html>/<body>, Google Fonts <link> tags, imports globals.css
+ │    ├── globals.css         # ported from css/styles.css (design tokens at the top)
+ │    ├── page.tsx            # home (index.html)
+ │    ├── projects/
+ │    │    └── page.tsx       # projects list (projects.html)
+ │    ├── project/
+ │    │    └── page.tsx       # project detail, reads ?p= via useSearchParams (project.html)
+ │    ├── blog/
+ │    │    └── page.tsx       # blog list (blog.html)
+ │    └── post/
+ │         └── page.tsx       # post detail, reads ?p= via useSearchParams (post.html)
+ ├── components/
+ │    ├── Nav.tsx             # shared sticky nav, active-link highlighting
+ │    ├── Footer.tsx          # shared footer
+ │    ├── Reveal.tsx          # scroll-reveal wrapper (IntersectionObserver hook)
+ │    ├── ProjectCard.tsx     # tile-link card (shared by home + projects list)
+ │    ├── PostCard.tsx        # tile-link card (shared by home + blog list)
+ │    ├── SkillsGrid.tsx
+ │    ├── ExperienceAccordion.tsx
+ │    ├── FilterBar.tsx       # generic category/tag filter (used by projects + blog)
+ │    └── ProjectPrevNext.tsx / PostPrevNext.tsx
+ ├── lib/
+ │    └── data.ts             # PROJECTS, CATEGORIES, POSTS, TAGS, ROLE_HISTORY, SKILL_GROUPS (ported from js/data.js)
+ ├── public/
+ │    └── assets/
+ │         ├── photo.jpg
+ │         └── CV_Muhammad_Rizqi.pdf
+ ├── next.config.ts
+ ├── tsconfig.json
+ └── package.json
 ```
 
 ## 🔄 4. Core Patterns & Guidelines
 
-*Rules on how specific coding tasks must be executed.*
-
-* **Architecture Pattern:** [e.g., Clean Architecture, MVC, MVVM]
-* **Dependency Injection:** [e.g., GetIt / Riverpod / InversifyJS - Explain how dependencies should be injected and located].
-* **State Management Rule:** [e.g., "UI must not contain business logic. All logic must reside in BLoC. UI only listens to state changes."]
-* **Data Flow:** [e.g., UI -> BLoC/Controller -> UseCase -> Repository -> Remote/Local DataSource].
+* **Architecture Pattern:** Simple component-per-section, no layered architecture (no domain/data/presentation split) — the app has no backend calls to warrant it. This intentionally does **not** follow `.claude/rules/05-mobile-standards.md`'s Clean Architecture layering, which applies to the mobile scaffold, not this static frontend.
+* **Dependency Injection:** None needed — no services to inject.
+* **State Management Rule:** Filter/accordion state lives in the component that owns the UI (`FilterBar`, `ExperienceAccordion`); no global store.
+* **Data Flow:** Page component → imports from `lib/data.ts` → passes props to presentational card/list components. Detail pages resolve the active item from `useSearchParams().get('p')` client-side (mirrors the source's `location.search` read in `app.js`), so `project/page.tsx` and `post/page.tsx` are Client Components.
+* **Naming:** All file, folder, function, and variable names in English (per user instruction), matching the source design's English content.
 
 ## 🛡 5. Error Handling & Logging
 
-*Standardize how the application handles failures.*
-
-* **Global Error Handling:** [e.g., Wrap network calls in a `Result` or `Either` type (Left for Failure, Right for Success)].
-* **User Feedback:** [e.g., Show a customized Snackbar for network errors, redirect to login on 401 Unauthorized].
-* **Logging Strategy:** [e.g., Use a dedicated logger class instead of standard `print()` or `console.log()`].
+* **Global Error Handling:** None required — no network calls to fail. If a `?p=<slug>` doesn't match any item, detail pages fall back the same way the source does (`arcibo` for projects, first item for posts).
+* **User Feedback:** Not applicable — no async states.
+* **Logging Strategy:** None — static app, no server-side logging surface.
 
 ## 🔐 6. Security Guidelines
 
-*Critical security constraints.*
-
-* **Environment Variables:** [e.g., All API URLs and Keys must be stored in `.env` and accessed via a config class].
-* **Token Storage:** [e.g., Use Flutter Secure Storage / Encrypted SharedPreferences for JWT tokens].
-* **Input Validation:** [e.g., All user inputs must be validated on the client side before submission].
+* **Environment Variables:** None required — no secrets, no API keys, no `.env` needed for the app to run.
+* **Token Storage:** Not applicable — no auth.
+* **Input Validation:** The only "input" is the `?p=` query param, which is only ever used to look up a slug in a static in-memory array (never rendered as raw HTML/executed), so no injection surface.
 
 ---
-
-> **[🤖 AI AGENT INSTRUCTION - POST-COMPLETION]**
-> Once the architecture is defined and approved, ask the user: *"The technical blueprint is ready. Should we proceed to define the data structures in **5-ERD.md**, define the endpoints in **6-API-CONTRACT.md**, or move to visual planning with **7-USER-FLOW.md**?"*
+> **Next:** `5-ERD.md` and `6-API-CONTRACT.md` are marked N/A (no database, no API — see those files). `7-USER-FLOW.md` maps the page navigation. `8-UI-UX-GUIDELINES.md` mirrors `docs/design/DESIGN.md` tokens.

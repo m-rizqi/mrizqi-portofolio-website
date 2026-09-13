@@ -9,9 +9,9 @@
 ---
 
 ## 📋 Project Information
-* **Project / Product Name:** [Product Name]
-* **Brief Vision:** [A single sentence explaining the main purpose of the product]
-* **Document Status:** [Draft / Needs Clarification / Final]
+* **Project / Product Name:** Muhammad Rizqi — Software Engineer Portfolio
+* **Brief Vision:** A personal portfolio site showcasing projects, experience, and writing — not a business venture, so a Business Model Canvas doesn't apply.
+* **Document Status:** Skipped — this is a 1:1 rebuild of an already-approved design (`docs/design/mrizqi-portofolio-design/`) into Next.js, not a new business idea needing validation. See `3-PRD.md` for the locked product spec.
 
 ---
 
