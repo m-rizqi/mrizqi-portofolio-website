@@ -1,47 +1,46 @@
 # 🧪 Testing, Quality Assurance & UAT Scenarios
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document governs the testing and Quality Assurance (QA) phase prior to production release. As an AI agent, you must not use generic test scripts.
-> 1. **Feature-Driven Test Generation:** Analyze the `docs/pra-development/3-PRD.md` and user stories to dynamically generate specific User Acceptance Testing (UAT) test cases.
-> 2. **Edge Case Coverage:** Define test steps not only for "happy paths" (successful scenarios) but also for negative paths (errors, invalid inputs, network drops, and empty states).
-> 3. **Interactive Execution:** Guide the user or testing team step-by-step through manual or automated test scenarios and record the verification results.
+> **Status: Executed 2026-09-13** against `source-codes/frontend` running locally (`npm run dev`), verified in a real Chrome tab. Test cases map directly to the Acceptance Criteria in `docs/pra-development/3-PRD.md`.
 
 ---
 
 ## 📋 1. Testing Strategy Overview
-*Summary of how quality assurance is validated for this specific release.*
 
-* **Testing Scope:** Functional Testing, UI/UX Consistency, Error Handling, and Edge Cases.
-* **Testing Environment:** [e.g., Staging / Local Simulator / QA Environment]
-* **Target Platforms:** [e.g., Android, iOS, Web Browsers (Chrome, Safari)]
-
----
+* **Testing Scope:** Functional testing (all 5 routes), visual parity against the source design, interaction testing (filters, accordion, navigation).
+* **Testing Environment:** Local dev server (`next dev`), Chrome via `claude-in-chrome`.
+* **Target Platforms:** Desktop Chrome (verified this session). Mobile/other-browser pass recommended before/along production launch — see §4.
 
 ## 🔍 2. Functional & UAT Test Cases
-*(Agent Note: Map these test cases directly to the features defined in the PRD).*
 
-### Feature Group: Authentication & Onboarding
-| Test ID | Test Scenario / Description | Preconditions | Expected Result | Pass/Fail |
-| :--- | :--- | :--- | :--- | :--- |
-| **TC-AUTH-01** | Successful login with valid credentials | User has an active account | User is authenticated, token is saved securely, and redirected to Home Dashboard. | [ ] |
-| **TC-AUTH-02** | Login failure with incorrect password | User enters a valid email and wrong password | An error snackbar/dialog appears with a clear description; user stays on login screen. | [ ] |
-| **TC-AUTH-03** | Form validation on empty inputs | User clicks login without typing anything | Inline validation errors appear under email and password fields. | [ ] |
+| # | Scenario | Steps | Expected | Result |
+|---|---|---|---|---|
+| 1 | Home page renders all sections | Load `/` | Hero, about, education, skills, featured projects (arcibo/mahezza/toko-management), experience accordion, honors, certifications, featured blogs (3), contact all present | ✅ Pass |
+| 2 | Scroll reveal | Scroll down `/` | Sections fade/translate in as they enter viewport, staggered | ✅ Pass |
+| 3 | Nav anchor links | Click About/Skills/Contact in nav | Scrolls to `#about` / `#skills` / `#contact` on home | ✅ Pass (verified `href="/#..."` wiring) |
+| 4 | CV download | Click "Download CV" / "Download portfolio" | Both download `CV_Muhammad_Rizqi.pdf` | ✅ Pass (same file, matches source placeholder behavior) |
+| 5 | Experience accordion default state | Load `/` | First entry ("Technical Consultant (Mobile)") open, rest closed | ✅ Pass |
+| 6 | Accordion toggle | Click a closed entry | That entry opens, previously open entry closes, sign flips `+`/`−` | ✅ Pass |
+| 7 | Accordion close | Click the currently open entry | It closes, none open | ✅ Pass (matches source `wasOpen` logic) |
+| 8 | Projects list + count | Load `/projects` | "12 of 12 projects", "All" filter active | ✅ Pass |
+| 9 | Projects filter | Click "Mobile" filter | Grid filters to Mobile-only projects, count updates to "8 of 12 projects", active chip inverts to navy | ✅ Pass |
+| 10 | Project detail | Load `/project?p=mahezza` | Correct title/summary/role/stack/highlights; "Open project ↗" shown (has `link`); browser tab title updates to "MAHEZZA — ... — Muhammad Rizqi" | ✅ Pass |
+| 11 | Project detail — no link | Load a project with empty `link` (e.g. `logistics-driver-app`) | "Open project" button hidden, only "Ask about this work" shown | ✅ Pass (conditional render verified in code) |
+| 12 | Project prev/next | View `/project?p=mahezza` | Prev/Next cards show correct neighboring titles per `PROJECTS` array order | ✅ Pass ("Netra" ← / → "Toko Management System") |
+| 13 | Project detail fallback | Load `/project?p=does-not-exist` | Falls back to `arcibo` (matches source behavior) | ✅ Pass (code path verified — same fallback logic as source) |
+| 14 | Blog list + tag filter | Load `/blog`, click a tag | Grid filters, count updates | ✅ Pass (same `FilterBar`/`useState` pattern as projects, verified via code + projects-page interaction test) |
+| 15 | Post detail | Load `/post?p=ocr-invoice-automation` | Correct title/tag/date/readTime/excerpt/body/byline; tab title updates | ✅ Pass |
+| 16 | Nav active state | Visit `/projects` and `/blog` | "Projects"/"Blog" nav link gets `.active` styling on their respective pages | ✅ Pass |
+| 17 | Contact links | Inspect contact cards on `/` | mailto, tel, LinkedIn external link, GitHub placeholder link all present verbatim | ✅ Pass |
+| 18 | Reduced motion | N/A (CSS-only, inherited unmodified from source `@media (prefers-reduced-motion: reduce)`) | Animations disabled | ⏭️ Not re-verified in-browser (CSS rule copied byte-for-byte from source, low risk) |
 
-### Feature Group: [Core Feature from PRD, e.g., Data Management / Workflow Trigger]
-| Test ID | Test Scenario / Description | Preconditions | Expected Result | Pass/Fail |
-| :--- | :--- | :--- | :--- | :--- |
-| **TC-FEAT-01** | [e.g., Successful creation of a new item] | [e.g., User is logged in and on the dashboard] | [e.g., Item is successfully saved, appears in the list view, and database updates.] | [ ] |
-| **TC-FEAT-02** | [e.g., Handling empty state when no data exists] | [e.g., User account is brand new with zero entries] | [e.g., App displays a friendly empty state placeholder with a call-to-action button.] | [ ] |
+## 🧯 3. Error / Edge Cases
 
----
+* [x] Unknown `?p=` slug on `/project` and `/post` — falls back gracefully (test #13), never crashes or shows a blank page.
+* [x] No network calls exist, so there is no "offline"/"timeout" state to test — confirmed by code (no `fetch`/`axios` anywhere in `source-codes/frontend`).
+* [x] Build-time check: `npm run build` — 0 TypeScript errors, 0 ESLint errors/warnings, all 5 routes prerendered as static (`○ (Static)`).
 
-## ⚠️ 3. Edge Cases & Negative Testing
-*Scenarios to verify system resilience under abnormal conditions.*
+## 📱 4. Recommended Before Production Launch (not yet executed)
 
-- [ ] **Network Loss Test:** Disconnect internet connection while performing a critical action. Verify that the app displays a clear "No Internet Connection" banner and does not crash.
-- [ ] **Slow Network (Throttling):** Simulate 3G or slow connection speeds. Verify that loading indicators (spinners or shimmers) appear immediately and prevent multiple duplicate submissions.
-- [ ] **Session Expiry Test:** Force-expire the JWT token or simulate a `401 Unauthorized` API response. Verify that the app safely redirects the user back to the login screen with a session-expired notice.
-
----
-> **[🤖 AI AGENT INSTRUCTION - POST-TESTING]**
-> Once all test cases are executed and verified as passed, the AI agent should state: *"All QA test scenarios have passed successfully. The application is verified and ready for handover documentation in `4-HANDOVER-DOC-TEMPLATE.md`."*
+* [ ] Manual pass on an actual mobile viewport (≤640px) — the source CSS has a dedicated `@media (max-width:640px)` block; spot-check `/`, `/projects`, `/project?p=...` for overflow/wrapping issues.
+* [ ] Cross-browser spot check (Safari, Firefox) — Google Fonts `<link>` and IntersectionObserver are broadly supported, but a quick visual pass is cheap insurance.
+* [ ] Lighthouse pass (Performance/Accessibility/Best Practices/SEO) once deployed to the real domain.

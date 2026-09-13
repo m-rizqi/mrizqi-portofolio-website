@@ -1,97 +1,49 @@
 # 🤝 Project Handover Document & Operational Guide
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document serves as the final project handover record. As an AI agent, you must dynamically generate and customize this guide based on the completed project structure, `docs/pra-development/3-PRD.md`, and `docs/pra-development/4-ARCHITECTURE.md`.
-> 1. **Context-Aware Summary:** Review all documentation and development artifacts to accurately summarize what was built, how it works, and where all components reside.
-> 2. **Interactive Information Gathering:** Ask the user for specific handover details if they are missing (e.g., repository links, production URLs, admin credential handover protocols, or support contact details).
-> 3. **Clarity and Completeness:** Ensure that the receiving party (client, new developer, or sysadmin) has everything they need to run, maintain, and scale the application without relying on external context.
+> **Status: Drafted 2026-09-13.**
 
 ---
 
 ## 📋 1. Project Overview & Summary
-*High-level summary of the delivered project.*
 
-* **Project Name:** [Insert Project Name]
-* **Client / Stakeholder:** [Insert Client/Owner Name]
-* **Handover Date:** [YYYY-MM-DD]
-* **Core Purpose:** [Briefly describe what problem this product solves, referencing the PRD].
-* **Live Production URL / App Link:** [Insert URL or App Store / Play Store links]
+* **Project Name:** Muhammad Rizqi — Software Engineer Portfolio
+* **Client / Stakeholder:** Muhammad Rizqi (mrizqi070502@gmail.com)
+* **Handover Date:** 2026-09-13
+* **Core Purpose:** Personal portfolio site (projects, blog, experience, CV) — see `docs/pra-development/3-PRD.md`. Rebuilt from an approved static HTML/CSS/JS design (`docs/design/mrizqi-portofolio-design/`) into a Next.js/React app so it can be run and maintained as a normal frontend codebase.
+* **Live Production URL:** `https://mrizqi.25hourslab.site` (once DNS + deployment in `2-DEPLOYMENT-GUIDE.md` are completed — not yet live as of this handover).
 
----
+## 🗂 2. Where Everything Lives
 
-## 🏗️ 2. Architecture & Technical Stack Inventory
-*Summary of the technologies and repository structure handed over.*
+* **App code:** `source-codes/frontend/` (Next.js 15, App Router, TypeScript)
+  * `app/` — pages (`/`, `/projects`, `/project`, `/blog`, `/post`) and `globals.css`
+  * `components/` — shared UI (nav, footer, cards, accordion, filters, reveal animation)
+  * `lib/data.ts` — **all editable content** (projects, blog posts, experience, skills)
+  * `public/assets/` — portrait photo and CV PDF
+* **Docs:** `docs/pra-development/` (locked product/architecture spec), `docs/development/` (task log, current state, tech debt), `docs/pasca-development/` (this folder), `docs/design/` (original design system + reference HTML/CSS/JS, kept as the design source of truth).
 
-* **Tech Stack Overview:**
-  * Frontend / Mobile: [e.g., Flutter, Next.js]
-  * Backend / API: [e.g., Node.js / Express or Firebase]
-  * Database: [e.g., PostgreSQL / Supabase]
-* **Repository & Access Links:**
-  * Source Code Repository: [Insert GitHub/GitLab URL]
-  * Design Files (Figma): [Insert Figma Link, if applicable]
-* **Project Directory Structure:**
-  *(Provide a brief overview of where key source code components are located, e.g., `/lib/features`, `/src/components`, etc.)*
+## ✏️ 3. How to Edit Content
 
----
+All editable content lives in **one file**: `source-codes/frontend/lib/data.ts`. Editing an entry there updates every place it appears (home page, list page, detail page) — same model as the original design's `js/data.js`.
 
-## 🔑 3. Credentials, Services & Environment Access
-*Inventory of external services and accounts associated with this project.*
-*(Note: Do not write raw passwords here; reference secure password managers or environment secret files).*
+* **Add/edit a project:** add an object to `PROJECTS` (`slug`, `title`, `category`, `org`, `year`, `role`, `summary`, `stack[]`, `highlights[]`, `link`). New categories must also be added to `CATEGORIES` to show up as a filter. Home page features the 3 slugs hardcoded in `app/page.tsx` (`FEATURED_PROJECT_SLUGS`).
+* **Add/edit a blog post:** add to `POSTS` (`slug`, `title`, `tag`, `date`, `readTime`, `excerpt`, `body[]`). New tags must also be added to `TAGS`. Home shows the first 3 entries in the array.
+* **Update experience:** edit `ROLE_HISTORY` — first array entry is open by default in the accordion.
+* **Update skills:** edit `SKILL_GROUPS` — `icon` is a single glyph character, `items` are the chip labels.
+* **Replace the portrait/CV:** overwrite `public/assets/photo.jpg` / `public/assets/CV_Muhammad_Rizqi.pdf` (keep the same filenames, or update the references in `app/layout.tsx`/`app/page.tsx`/`components/Nav.tsx`/`components/PostDetail.tsx`).
+* **Known placeholders still in the content** (carried over from the original design on purpose — see `docs/development/1-TASK-CHECKLIST.md`): GitHub username/link, blog post bodies (draft copy), project/article screenshots (`.imgph` dashed boxes), and the "Download portfolio" button (currently serves the same PDF as "Download CV"). Fix these directly in `lib/data.ts` and the relevant component whenever real content is ready.
 
-* **Hosting & Server Provider:** [e.g., DigitalOcean / Vercel / AWS]
-* **Domain Registrar & DNS Manager:** [e.g., Cloudflare / Namecheap]
-* **Third-Party Integrations:**
-  * Authentication: [e.g., Firebase Auth / Google Auth]
-  * Database Hosting: [e.g., Supabase / AWS RDS]
-  * Notifications / Webhooks: [e.g., n8n / Firebase Cloud Messaging]
-* **Environment Files (.env):** Located on the production server / secure vault. (Refer to `.env.example` in the repository root for required keys).
+## 🖥 4. Running & Deploying
 
----
+* **Local development:** `cd source-codes/frontend && npm install && npm run dev`
+* **Production build:** `npm run build && npm start`
+* **Deployment:** self-managed Ubuntu VPS, PM2 + Nginx + Certbot, domain `mrizqi.25hourslab.site` — full step-by-step in `docs/pasca-development/2-DEPLOYMENT-GUIDE.md`.
+* **Security posture:** no secrets, no `.env`, no database, no auth — see `docs/pasca-development/1-SECURITY-CHECKLIST.md`.
 
-## 🚀 4. Maintenance, Backup & Operations Guide
-*Instructions on how to keep the system running smoothly.*
+## 🧭 5. Design System Reference
 
-* **Starting / Restarting Services:**
-  ```bash
-  # Insert commands to start/restart the app or containers
-  docker-compose -f docker-compose.prod.yml restart
+`docs/pra-development/8-UI-UX-GUIDELINES.md` (locked) and `docs/design/DESIGN.md` document every color token, type scale, spacing/radius rule, and motion timing. Any new UI must draw from these tokens rather than inventing new hex values or paddings — CSS custom properties live at the top of `source-codes/frontend/app/globals.css`.
 
-```
+## 📞 6. Support / Contact
 
-* **Database Backup Procedure:**
-```bash
-# Insert standard database backup command, e.g., pg_dump
-pg_dump -U username dbname > backup_$(date +%F).sql
-
-```
-
-
-* **Log Monitoring:** How and where to check server logs for errors.
-
----
-
-## 🐛 5. Known Limitations & Technical Debt
-
-*Important notes on pending features or known trade-offs.*
-
-* **Unresolved Technical Debt:** Refer to `docs/development/3-TECH-DEBT-LOG.md` for a complete list of minor shortcuts or pending refactors.
-* **Out of Scope (Future Roadmap):** Features explicitly deferred from the MVP scope (refer to `3-PRD.md`).
-
----
-
-## 📞 6. Support & Maintenance Contacts
-
-*Who to contact for technical support or future feature requests.*
-
-* **Lead Developer / AI Architect:** [Your Name / Agency Name]
-* **Support Email:** [support@yourdomain.com]
-* **Handover Sign-off:**
-* Handed over by: _______________________ Date: _________
-* Received by: ___________________________ Date: _________
-
-
-
----
-
-> **[🤖 AI AGENT INSTRUCTION - PROJECT COMPLETION]**
-> Once this handover document is completed and reviewed, the AI agent should congratulate the user: *"Congratulations! The project has been fully planned, developed, secured, deployed, and documented. The vibecoding lifecycle is complete!"*
+* **Owner:** Muhammad Rizqi — mrizqi070502@gmail.com
+* **Repo:** this repository (`mrizqi-portofolio-website`), `main` branch.

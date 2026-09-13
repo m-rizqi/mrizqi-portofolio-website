@@ -1,47 +1,27 @@
 # 🔒 Security Checklist & Vulnerability Audit
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document governs the security hardening phase of the project. As an AI agent, you must act as a Rigorous Security Auditor before authorizing any deployment.
-> 1. **Dynamic Generation:** Based on the technologies listed in `docs/pra-development/4-ARCHITECTURE.md` and endpoints in `docs/pra-development/6-API-CONTRACT.md`, you must define and tailor specific security checklist items for this project (do not rely solely on generic rules).
-> 2. **Strict Enforcement:** Every security item below must be verified and checked off `[x]` before the app is cleared for production deployment.
-> 3. **Zero Hardcoding:** Ensure zero tolerance for hardcoded API keys, secrets, or database credentials.
-> 4. **Vulnerability Flagging:** If you detect a security flaw in the codebase during your review, stop immediately, log it here, and provide a secure patch.
+> **Status: Reviewed 2026-09-13.** This is a fully static Next.js site (no auth, no database, no API routes, no user-submitted forms — see `docs/pra-development/4-ARCHITECTURE.md`), so most of the generic checklist below collapses to "not applicable" by design. Items are tailored to what actually exists in `source-codes/frontend/`.
 
 ---
 
 ## 🛡️ 1. Authentication & Authorization Security
-*Verify how user identities and access permissions are managed.*
+* [x] **N/A — no authentication.** The site has no login, no user accounts, no sessions. Nothing to secure here.
+* [x] **Environment Isolation:** No `.env` file exists or is required — there are no secrets, API keys, or database URLs anywhere in the codebase (confirmed: no `process.env` reads in `source-codes/frontend`).
+* [x] **Git Ignore Verification:** `source-codes/frontend/.gitignore` excludes `node_modules`, `.next/`, `*.tsbuildinfo`, and `.env*.local` (present defensively even though no `.env` is used today).
 
-- [ ] **Token Storage:** JWT or session tokens are stored securely (e.g., using Flutter Secure Storage / Encrypted SharedPreferences on mobile, or HttpOnly secure cookies on web). Never stored in plain `SharedPreferences` or `localStorage`.
-- [ ] **Token Expiry & Refresh:** Token expiration, invalidation, and refresh mechanisms are properly implemented.
-- [ ] **Route Protection:** All protected backend routes and frontend screens strictly validate user authentication roles before rendering data.
-- [ ] **Password Policies:** If applicable, user passwords enforce minimum length and complexity rules.
-- [ ] **Environment Isolation:** All sensitive keys (`API_KEY`, database URLs, secret tokens) are stored exclusively in local `.env` files and **never** hardcoded or committed to version control.
-- [ ] **Git Ignore Verification:** The `.env`, `.env.local`, and build-specific secret files are explicitly declared in `.gitignore`.
-- [ ] **Example Template Provided:** A safe `.env.example` file containing dummy keys is provided for developers to clone without exposing real secrets.
+## 🌐 2. Input Handling
+* [x] **Only user-controlled input:** the `?p=` query string on `/project` and `/post`, read via `useSearchParams().get('p')`. It is only ever used as a key to look up an item in a static, compile-time array (`Array.prototype.findIndex`) — never rendered as raw HTML, never used in a DOM API like `innerHTML`, never passed to `eval`/`Function`, never used to build a file path or shell command. No injection surface (XSS, path traversal, SSTI) exists here.
+* [x] **No forms.** Contact is `mailto:` / `tel:` / external links only (per PRD scope) — no server-side form handling, so no CSRF/validation surface either.
 
-## 🌐 2. Network & API Security
-*Verify how data travels between the client and server.*
+## 📦 3. Dependency Security
+* [x] `npm audit` run 2026-09-13 after pinning `next` to `15.5.25` (patched — the initial `15.5.4` pin had a disclosed critical RCE, CVE-2025-66478, caught before any app code was written).
+* [ ] **Known remaining item:** one moderate `postcss` advisory, transitive via Next.js's own build tooling, fixable only by a Next 16 major bump — logged in `docs/development/3-TECH-DEBT-LOG.md` Item 1, deferred by design (not blocking for a static site with no attacker-controlled CSS input).
+* [ ] **Before each deploy:** re-run `npm audit` in `source-codes/frontend/` and address any new high/critical findings before shipping.
 
-- [ ] **HTTPS Enforcement:** All network requests strictly use `HTTPS` in production. Cleartext HTTP traffic is blocked.
-- [ ] **API Key Masking:** All third-party API keys (e.g., Firebase, payment gateways, LLM services) are hidden in `.env` files and injected during build time, never exposed in client-side source code.
-- [ ] **Request Validation:** Both client-side and server-side validate incoming and outgoing payloads to prevent injection attacks (SQL Injection, NoSQL Injection, XSS).
-- [ ] **Rate Limiting:** Critical endpoints (like login, OTP, and registration) have rate-limiting mechanisms to prevent brute-force attacks.
-
-## 📱 3. Client-Side & Local Data Security (Mobile/Frontend)
-*Verify the security posture of the application runtime.*
-
-- [ ] **Data Caching:** Sensitive user data cached locally is encrypted or wiped upon logout.
-- [ ] **SSL Pinning (Optional/High-Security):** Implemented if the project requires maximum defense against Man-in-the-Middle (MitM) attacks.
-- [ ] **Code Obfuscation:** Release builds are configured for code obfuscation and minification (e.g., ProGuard/R8 enabled for Android, or Flutter obfuscate flags).
-- [ ] **Debug Logs Removal:** All debug statements, console logs, and sensitive print functions are stripped out of production builds.
-
-## 📋 4. Project-Specific Custom Security Rules
-*(Agent Note: Define additional security checks tailored specifically to the features outlined in `3-PRD.md`).*
-
-- [ ] **Custom Rule 1:** [e.g., Verify that webhook payloads from n8n are authenticated via secret signatures].
-- [ ] **Custom Rule 2:** [e.g., Ensure offline local database (SQLite/Hive) is encrypted if storing personal user data].
+## 🚀 4. Deployment / Transport Security
+* [ ] **HTTPS enforced** — covered in `2-DEPLOYMENT-GUIDE.md` (Nginx + Certbot). Confirm before going live.
+* [ ] **Security headers** — set at the Nginx layer (see `2-DEPLOYMENT-GUIDE.md` §4): `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`. No `Content-Security-Policy` beyond the default is required since the only third-party origin loaded is `fonts.googleapis.com`/`fonts.gstatic.com`.
+* [x] **No file uploads, no user-generated content storage** — nothing for an attacker to plant on the server.
 
 ---
-> **[🤖 AI AGENT INSTRUCTION - POST-AUDIT]**
-> Once all items in this checklist are verified and marked as `[x]`, the AI agent must state: *"All security checks have successfully passed. The project is cleared for the deployment phase."*
+> Re-review this checklist if the site ever grows a contact form, CMS, or any server-side data handling — at that point the N/A items above become real requirements again.

@@ -1,46 +1,27 @@
 # 🛠️ Technical Debt Log
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document tracks temporary code shortcuts, hacks, unrefactored modules, and pending optimizations.
-> 1. **Log Shortcut Solutions:** Whenever you implement a quick workaround, mock data, or a non-optimal architectural bypass to solve an urgent blocker, you must log it here immediately.
-> 2. **Severity Levels:** Classify each technical debt item by severity (Low, Medium, High) so the team knows what needs immediate cleanup before production release.
-> 3. **No Silent Accumulation:** Do not hide technical debt. Keeping this log updated ensures the application remains stable and easy to maintain over time.
-
 ---
 
 ## 📋 Technical Debt Tracker
 
-### Item 1: [e.g., Hardcoded JWT Token in Local Mock]
-* **Date Added:** [e.g., 2026-05-15]
-* **Severity:** 🔴 High
-* **Associated Feature/Module:** Auth Module (`/features/auth`)
-* **Description:** 
-  * *What is the shortcut?* Currently returning a hardcoded dummy JWT string instead of handling real token generation from the backend interceptor because the staging server is down.
-  * *Why was it done?* To unblock UI testing for the dashboard screen.
-* **Refactoring Plan:** Replace the mock implementation with the actual Dio interceptor once the backend `/auth/login` endpoint is live.
-
----
-
-### Item 2: [e.g., Missing Error State Handling in Widget]
-* **Date Added:** [e.g., [Date]]
-* **Severity:** 🟡 Medium
-* **Associated Feature/Module:** [e.g., Item List Screen]
-* **Description:** 
-  * *What is the shortcut?* The `ListView` widget fails silently if the network times out instead of showing a proper retry button.
-  * *Why was it done?* Speeding up initial MVP delivery.
-* **Refactoring Plan:** Wrap the list builder in a `BlocBuilder` with explicit handling for `NetworkError` states.
-
----
-
-### Item 3: [e.g., Unused Dependencies in pubspec.yaml]
-* **Date Added:** [e.g., [Date]]
+### Item 1: `postcss` moderate advisory via Next.js build tooling
+* **Date Added:** 2026-09-13
 * **Severity:** 🟢 Low
-* **Associated Feature/Module:** Global Setup
-* **Description:** 
-  * *What is the shortcut?* Installed `url_launcher` earlier but ended up using standard web navigation instead.
-  * *Why was it done?* Leftover from early prototyping.
-* **Refactoring Plan:** Remove the package from dependencies and clean up imports before final production build.
+* **Associated Feature/Module:** `source-codes/frontend` build pipeline
+* **Description:**
+  * *What is the shortcut?* `npm audit` (after pinning `next` to the patched `15.5.25`) still reports one moderate advisory in `postcss` (source-map/XSS in CSS stringification), pulled in transitively by Next.js's own bundled build tooling — not a package we import or call directly.
+  * *Why was it done?* The only fix (`npm audit fix --force`) upgrades to `next@16.x`, a breaking major version change outside the approved `4-ARCHITECTURE.md` tech stack (Next 15 App Router was the locked decision).
+* **Refactoring Plan:** Revisit when the project deliberately upgrades to Next.js 16, or when a patched `postcss` ships for the Next 15 line — re-run `npm audit` at that point.
 
 ---
-> **[🤖 AI AGENT INSTRUCTION - POST-LOG UPDATE]**
-> Whenever a technical debt item listed above is fully resolved and refactored in the codebase, change its status to `[RESOLVED]` or remove it from the log, and inform the user.
+
+### Item 2: Real assets still placeholders (carried from source design, not new debt)
+* **Date Added:** 2026-09-13
+* **Severity:** 🟢 Low
+* **Associated Feature/Module:** `lib/data.ts`, `.imgph` placeholders, contact section
+* **Description:**
+  * *What is the shortcut?* GitHub username, project/article screenshots, and blog post bodies are still the source design's own placeholders ("add your username", dashed `.imgph` boxes, "Draft…" copy).
+  * *Why was it done?* Explicit user instruction to copy the source design exactly, with nothing changed — these are pre-existing placeholders in the approved design, not shortcuts introduced during the port.
+* **Refactoring Plan:** Only touch `lib/data.ts` (content) and `public/assets/` (images/PDF) when the user is ready to supply real content — no component code changes needed.
+
+---

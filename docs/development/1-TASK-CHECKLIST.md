@@ -1,92 +1,71 @@
 # 📝 Detailed Development Task Checklist
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document tracks the implementation progress of the project based on the PRD and Architecture documents.
-> 1. **Granularity is Key:** Always break down high-level tasks into smaller, actionable subtasks. Do not check off a main parent task until ALL its subtasks are completed `[x]`.
-> 2. **Continuous Updates:** Update this file ONLY AFTER the code for that specific subtask has been written, integrated, and verified.
-> 3. **Sync with PRD:** The features listed in Phase 3 must directly match the User Stories in `docs/pra-development/3-PRD.md`.
-> 4. **Session Handoff:** At the end of a coding session, summarize what subtasks were checked off so the next session can resume seamlessly.
+> Hand-maintained per `CLAUDE.md` (GSD Core disabled for this project). Tracks the Next.js/React port of `docs/design/mrizqi-portofolio-design/` into `source-codes/frontend/`, per the locked `docs/pra-development/3-PRD.md` and `4-ARCHITECTURE.md`.
 
 ---
 
 ## 🏗️ Phase 1: Project Setup & Initialization
-*Foundation steps before writing any business logic.*
 
-- [ ] **Repository Setup**
-  - [ ] Initialize Git repository.
-  - [ ] Configure `.gitignore` based on the framework.
-  - [ ] Set up `README.md` and document the folder structure.
-- [ ] **Project Scaffolding**
-  - [ ] Generate base project (e.g., `flutter create` or `npx create-next-app`).
-  - [ ] Create the architectural directories (`/features`, `/core`, `/shared`).
-  - [ ] Configure environment variables (`.env`, `.env.example`).
-- [ ] **Dependencies Installation**
-  - [ ] Install State Management libraries (e.g., BLoC, Zustand).
-  - [ ] Install Network/API clients (e.g., Dio, Axios).
-  - [ ] Install UI/Styling libraries.
+- [x] **Repository Setup**
+  - [x] `.gitignore` for `source-codes/frontend/` (Next.js defaults: `node_modules`, `.next`, etc.)
+- [x] **Project Scaffolding**
+  - [x] Hand-scaffolded Next.js 15 App Router project (TypeScript) — `package.json`, `tsconfig.json`, `next.config.ts`, `eslint.config.mjs`.
+  - [x] Directory structure per `4-ARCHITECTURE.md`: `app/`, `components/`, `lib/`, `public/assets/`.
+- [x] **Dependencies Installation**
+  - [x] `next`, `react`, `react-dom` (pinned to a patched Next.js version after `npm audit` flagged CVE-2025-66478 on the initial pin).
+  - [x] No state management or network-client libraries — none needed (static content, local `useState` only, per `4-ARCHITECTURE.md`).
 
 ## 🎨 Phase 2: Core Systems & Theming
-*Establishing the global rules and design system.*
 
-- [ ] **Design System Implementation**
-  - [ ] Define Brand Colors and Theme variables in code based on `8-UI-UX-GUIDELINES.md`.
-  - [ ] Set up global Typography (Fonts, sizes, weights).
-  - [ ] Create base UI components (Primary Button, Custom TextField, Cards).
-- [ ] **Routing/Navigation System**
-  - [ ] Initialize Router configuration.
-  - [ ] Define constant route names/paths.
-  - [ ] Create empty placeholder screens for all routes outlined in `7-USER-FLOW.md`.
-- [ ] **Network & API Configuration**
-  - [ ] Setup base API client and interceptors.
-  - [ ] Implement global error handler for network requests.
+- [x] **Design System Implementation**
+  - [x] Ported `css/styles.css` verbatim into `app/globals.css` (design tokens preserved as-is).
+  - [x] Google Fonts loaded via `<link>` in `app/layout.tsx`, matching source loading method exactly (not `next/font`).
+- [x] **Routing/Navigation System**
+  - [x] App Router pages: `/`, `/projects`, `/project` (`?p=slug`), `/blog`, `/post` (`?p=slug`) — mirrors source page set and query-string detail pattern.
+  - [x] Shared `Nav` / `Footer` components with active-page highlighting.
 
 ## 🚀 Phase 3: Feature Implementation (MVP)
-*(Agent Note: Break down each feature from the PRD into granular subtasks following the pattern below).*
 
-### Feature 1: Authentication (Example)
-- [ ] **UI Implementation**
-  - [ ] Build Login Screen layout (Forms, buttons, branding).
-  - [ ] Build Register Screen layout.
-  - [ ] Implement client-side form validation (e.g., email format, password length).
-- [ ] **State Management**
-  - [ ] Define Auth States (Initial, Loading, Authenticated, Error).
-  - [ ] Create Auth Events/Actions (LoginRequested, LogoutRequested).
-  - [ ] Implement State Controller / BLoC logic.
-- [ ] **Data Layer**
-  - [ ] Create Auth Model/DTOs based on `6-API-CONTRACT.md`.
-  - [ ] Implement Auth Repository to handle API calls.
-  - [ ] Setup secure local storage for JWT tokens.
-- [ ] **Integration & Testing**
-  - [ ] Connect UI to State (trigger login event on button press).
-  - [ ] Handle error states (Show Snackbar/Dialog on failure).
-  - [ ] Verify successful redirect to Home Dashboard.
+### Feature 1: Home page
+- [x] Hero, about, education, skills, featured projects, experience accordion, honors, certifications, featured blogs, contact — all ported from `index.html`.
+- [x] In-page anchor links (`#about`, `#skills`, `#contact`) verified.
+- [x] CV/portfolio download buttons point at `/assets/CV_Muhammad_Rizqi.pdf`.
 
-### Feature 2: [Feature Name from PRD]
-- [ ] **UI Implementation**
-  - [ ] [Subtask 1: e.g., Build List View layout]
-  - [ ] [Subtask 2: e.g., Build Detail View layout]
-- [ ] **State Management**
-  - [ ] [Subtask 1: e.g., Define Loading/Success/Error states]
-  - [ ] [Subtask 2: e.g., Implement fetch data logic]
-- [ ] **Data Layer**
-  - [ ] [Subtask 1: e.g., Create Data Model]
-  - [ ] [Subtask 2: e.g., Create Repository for API call]
-- [ ] **Integration & Testing**
-  - [ ] [Subtask 1: e.g., Connect UI to fetch on screen load]
+### Feature 2: Projects list + detail
+- [x] `/projects` — category filter (`FilterBar` + `ProjectsExplorer`), count text, card grid.
+- [x] `/project?p=<slug>` — detail hero, role/stack side cards, highlights, prev/next (wraps around list).
+
+### Feature 3: Blog list + detail
+- [x] `/blog` — tag filter (`FilterBar` + `BlogExplorer`), count text, card grid.
+- [x] `/post?p=<slug>` — full body, byline, prev/next (wraps around list).
+
+### Feature 4: Shared navigation & contact
+- [x] Sticky nav on every page, `.active` state matches source CSS behavior.
+- [x] Contact cards (email, LinkedIn, GitHub, phone) — including the still-placeholder GitHub link/label, carried over verbatim per PRD scope.
+
+### Behavior parity (`app.js` → React)
+- [x] Scroll reveal (`useReveal` hook + `Reveal` component) — IntersectionObserver, 70ms stagger cycling every 4, respects `prefers-reduced-motion` (inherited from source CSS, untouched).
+- [x] Experience accordion — one open at a time, first entry open by default, click-to-close-reopen matches source logic exactly.
+- [x] Category/tag filters — client-side `useState`, same count format ("N of M …").
+- [x] Detail page fallback — unmatched `?p=` slug falls back the same way as source (`arcibo` for projects, first item for posts).
+- [x] `document.title` set client-side per detail item, matching source's JS-driven title (not a static meta tag).
 
 ## 🐛 Phase 4: Polish & Quality Assurance
-*Steps to take before finalizing the development phase.*
 
-- [ ] **Code Refactoring & Cleanup**
-  - [ ] Remove unused imports and debug (`print`/`console.log`) statements.
-  - [ ] Extract repetitive widgets/components into the `/shared` folder.
-- [ ] **Edge Cases & Error Handling**
-  - [ ] Verify Loading and Error states on slow networks.
-  - [ ] Implement and verify "Empty States" (e.g., displaying "No data found").
-- [ ] **Security & Performance**
-  - [ ] Ensure no hardcoded API keys or secrets exist in the codebase.
-  - [ ] Verify app layout responsiveness and prevent rendering overflows.
+- [x] **Build verification** — `npm run build` compiles clean (0 errors, 0 warnings) with TypeScript + ESLint (`next/core-web-vitals`, `next/typescript`).
+- [x] **Visual verification** — every route checked in-browser against the source design (see session log): home (hero → contact), `/projects` incl. filter interaction, `/project?p=mahezza` incl. prev/next, `/post?p=ocr-invoice-automation`.
+- [x] **Security & Performance**
+  - [x] No secrets/env vars — none required (static site, confirmed against `4-ARCHITECTURE.md`).
+  - [x] `npm audit` — 0 high/critical after pinning Next.js to a patched version; 1 remaining moderate advisory (`postcss`, transitive via Next's build tooling) requires a Next 16 major bump, deferred — tracked in `3-TECH-DEBT-LOG.md`.
+
+## 📌 Deliberately not done (matches PRD "Out of Scope")
+
+- [ ] Real project/article screenshots (source `.imgph` placeholders kept as-is).
+- [ ] GitHub username (source placeholder "add your username" kept as-is).
+- [ ] Blog post bodies are still source's own "Draft…" placeholder copy.
+- [ ] Separate "portfolio" PDF (both CV buttons intentionally serve the same file, per source).
+
+These are pre-existing placeholders in the approved source design, not gaps introduced by this port — see `docs/design/mrizqi-portofolio-design/DESIGN.md` §8 "Known placeholders".
 
 ---
-> **[🤖 AI AGENT INSTRUCTION - POST-TASK COMPLETION]**
-> Whenever you complete a subtask, mark it as `[x]`. Only when all subtasks under a parent task are checked, can you mark the parent task as `[x]`. Keep the user informed of the exact subtask you are currently executing.
+> **Status: Phase 1–4 complete.** Ready for `docs/pasca-development/` once the user confirms the build is accepted.

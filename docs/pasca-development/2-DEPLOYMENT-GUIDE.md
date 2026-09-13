@@ -1,112 +1,121 @@
 # 🚀 Deployment Guide & Release Instructions
 
-> **[🤖 AI AGENT INSTRUCTIONS - READ THIS FIRST]**
-> This document serves as the customized deployment blueprint for the project. As an AI agent, you must not give generic instructions. 
-> 1. **Context-Aware Generation:** Analyze the `docs/pra-development/4-ARCHITECTURE.md` and the final product structure. Tailor this deployment guide explicitly to the actual tech stack used (e.g., Docker, VPS, Vercel, Google Play Store, Apple App Store).
-> 2. **Interactive Environment Gathering:** Before generating the final deployment steps, ask the user for their target server specifications, hosting provider, or domain configurations if they are not yet defined.
-> 3. **Environment Security Check:** Remind the user and verify that all production `.env` variables are correctly configured and secured before any build or publish command is executed.
-> 4. **Step-by-Step Clarity:** Provide deterministic, copy-pasteable terminal commands and configuration blocks.
+> **Status: Drafted 2026-09-13** for the confirmed target: a self-managed **Ubuntu 22.04/24.04 VPS**, process-managed with **PM2**, reverse-proxied by **Nginx** with **Certbot** for TLS, domain **`mrizqi.25hourslab.site`**. Adjust IP/SSH details to your actual VPS before running these commands.
 
 ---
 
 ## 📋 1. Target Deployment Architecture
-*Summary of where and how the application will be hosted based on project specifications.*
 
-* **Target Platform:** [e.g., Linux VPS (Ubuntu 22.04) / Cloud Server / Mobile Stores]
-* **Hosting Provider:** [e.g., DigitalOcean / AWS / Vercel / Google Play Console]
-* **Containerization:** [e.g., Docker & Docker Compose]
-* **Web Server / Reverse Proxy:** [e.g., Nginx with SSL via Certbot]
+* **Target Platform:** Self-managed Linux VPS (Ubuntu 22.04/24.04)
+* **Hosting Provider:** User-managed (not a PaaS like Vercel/Netlify)
+* **Containerization:** None — running Next.js directly via Node.js + PM2 (kept minimal; add Docker later only if you outgrow this)
+* **Web Server / Reverse Proxy:** Nginx, terminating TLS via Certbot (Let's Encrypt)
+* **Domain:** `mrizqi.25hourslab.site` → point this domain's DNS **A record** at the VPS's public IP before requesting a certificate.
 
----
-
-## 🛠️ 2. Pre-Deployment Verification
-*Mandatory checks to execute before initiating a production build.*
-
-- [ ] **Security Audit Passed:** Ensure `1-SECURITY-CHECKLIST.md` is fully completed and checked off.
-- [ ] **Environment Variables:** Verify that production secrets (database URLs, production API keys) are safely stored in the server's environment or secure secret manager, **never** hardcoded.
-- [ ] **Dependency Clean-up:** Remove unused dependencies, dev-dependencies, and debug statements.
-- [ ] **Database Migrations:** Prepare production migration scripts or database initialization steps.
-
----
-
-## 📦 3. Build & Packaging Instructions
-*Step-by-step commands to compile the application for production.*
-
-### Step 1: Environment Configuration
-Create the production environment file on the target server or build machine:
-```bash
-cp .env.example .env.production
-# Edit the variables with production values
-nano .env.production
-
+```mermaid
+graph LR
+    Visitor -->|HTTPS 443| Nginx
+    Nginx -->|HTTP 127.0.0.1:3000| NextApp[Next.js - PM2 managed]
+    Certbot -.renews cert for.-> Nginx
 ```
 
-### Step 2: Build Application / Containers
-
-*(Agent Note: Replace the commands below with the correct ones matching the project's tech stack, e.g., Docker build, Flutter build release, or Next.js production build).*
+## ⚙️ 2. One-Time Server Setup
 
 ```bash
-# Example Docker production build
-docker-compose -f docker-compose.prod.yml build
+# 1. Update system
+sudo apt update && sudo apt upgrade -y
 
+# 2. Install Node.js LTS (via NodeSource — adjust version if the project's package.json engines change)
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 3. Install PM2 globally
+sudo npm install -g pm2
+
+# 4. Install Nginx
+sudo apt install -y nginx
+
+# 5. Install Certbot (Nginx plugin)
+sudo apt install -y certbot python3-certbot-nginx
 ```
 
----
+## 📦 3. Deploying the App
 
-## 🌐 4. Server Setup & Hosting Configuration (If applicable)
+```bash
+# 1. Clone the repo (or pull latest on redeploy)
+git clone <your-repo-url> ~/mrizqi-portofolio-website
+cd ~/mrizqi-portofolio-website/source-codes/frontend
 
-*Instructions for configuring a VPS, cloud instance, or reverse proxy.*
+# 2. Install dependencies (devDependencies needed for the build step)
+npm install
 
-* **Nginx Configuration Template:**
+# 3. Build for production
+npm run build
+
+# 4. Start under PM2 (runs `next start`, defaults to port 3000)
+pm2 start npm --name "mrizqi-portfolio" -- start
+
+# 5. Persist PM2 across reboots
+pm2 save
+pm2 startup   # follow the printed instructions (runs a systemd-integration command once)
+```
+
+**Redeploying after a content/code change:**
+
+```bash
+cd ~/mrizqi-portofolio-website/source-codes/frontend
+git pull
+npm install
+npm run build
+pm2 restart mrizqi-portfolio
+```
+
+## 🌐 4. Nginx Reverse Proxy + SSL
+
+Create `/etc/nginx/sites-available/mrizqi-portfolio`:
+
 ```nginx
 server {
     listen 80;
-    server_name yourdomain.com;
+    server_name mrizqi.25hourslab.site;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
     }
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 }
-
 ```
 
-
-* **SSL Certificate Setup (Certbot):**
 ```bash
-sudo certbot --nginx -d yourdomain.com
+sudo ln -s /etc/nginx/sites-available/mrizqi-portfolio /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 
+# Issue and auto-install the TLS certificate (also sets up HTTP→HTTPS redirect)
+sudo certbot --nginx -d mrizqi.25hourslab.site
 ```
 
+Certbot installs a renewal timer automatically (`systemctl status certbot.timer`) — no manual cron needed.
 
+## 🔐 5. Environment & Secrets
 
----
+* **No `.env` file is required.** This app has no API keys, database URLs, or secrets (see `docs/pasca-development/1-SECURITY-CHECKLIST.md`). Nothing to configure here beyond the app itself.
 
-## 🚀 5. Launch & Post-Deployment Verification
+## ✅ 6. Post-Deploy Verification
 
-*Steps to ensure the application is running successfully after release.*
-
-1. **Start Services:** Start the application daemon or Docker containers.
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-
-```
-
-
-2. **Health Check:** Test the application health endpoint or access the public URL.
-3. **Log Monitoring:** Monitor server or application logs for any startup errors or unhandled exceptions.
-```bash
-docker-compose logs -f --tail=100
-
-```
-
-
-
----
-
-> **[🤖 AI AGENT INSTRUCTION - POST-DEPLOYMENT]**
-> Once the deployment guide is successfully executed and the application is live, the AI agent should ask the user: *"The deployment process is documented and verified. Would you like to create a **3-TESTING-QA.md** script or a **4-HANDOVER-DOC-TEMPLATE.md** to complete the project lifecycle?"*
+* [ ] `https://mrizqi.25hourslab.site/` loads with a valid padlock (TLS).
+* [ ] All 5 routes reachable: `/`, `/projects`, `/project?p=arcibo`, `/blog`, `/post?p=clean-architecture-flutter`.
+* [ ] `pm2 status` shows `mrizqi-portfolio` as `online`.
+* [ ] `pm2 logs mrizqi-portfolio --lines 50` shows no startup errors.
+* [ ] Reboot the VPS once and confirm the app comes back automatically (`pm2 startup` + `pm2 save` did their job).
