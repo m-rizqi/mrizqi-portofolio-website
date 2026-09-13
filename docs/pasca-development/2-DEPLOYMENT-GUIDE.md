@@ -42,6 +42,8 @@ sudo apt install -y certbot python3-certbot-nginx
 
 ## 📦 3. Deploying the App
 
+*Optional if you'd rather let CI do it:* the GitHub Actions `deploy` job (§7) is idempotent and can perform this exact clone → install → build → `pm2 start` sequence automatically on its first run, once §2 and the Nginx/TLS/DNS setup (§4–5) are done and the repo secrets (§7) are added. Run the steps below manually only if you want the app live before wiring up CI, or you prefer to control the first deploy by hand.
+
 ```bash
 # 1. Clone the repo (or pull latest on redeploy)
 git clone <your-repo-url> ~/mrizqi-portofolio-website
@@ -134,7 +136,8 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 `.github/workflows/deploy.yml` runs on push/PR to `main`/`dev`, scoped to changes under `source-codes/frontend/**` (this repo has no other deployable service, so a docs-only or backend-scaffold commit never triggers a build/deploy):
 
 * **`build` job** (always) — `npm ci && npm run build` in `source-codes/frontend`, catches type/lint/build errors before merge.
-* **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs the same `git pull` → `npm install` → `npm run build` → `pm2 restart mrizqi-portfolio` sequence documented in §3, non-interactively.
+* **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs an **idempotent** version of the §3 sequence: clones the repo if it isn't there yet, otherwise pulls; `npm install` + `npm run build`; then `pm2 restart mrizqi-portfolio` if that process already exists, otherwise `pm2 start` it fresh. This means **the very first deploy can also go through this workflow** — you don't have to manually run the §3 clone/build/pm2-start steps yourself, as long as §2 (Node/PM2/Nginx/Certbot installed) and §4–5 (DNS + Nginx + TLS cert) are already done.
+* **What auto-deploy does *not* cover:** installing Node/PM2/Nginx/Certbot (§2), the Nginx site config and TLS certificate (§5), and the Cloudflare DNS record (§4). Those need `sudo` and are one-time infrastructure setup — intentionally kept manual so the CI deploy SSH user only needs permission to `git`, `npm`, and `pm2` in its own home directory, not root.
 
 **One-time setup — add these as GitHub repo secrets** (`Settings → Secrets and variables → Actions → New repository secret`):
 

@@ -54,6 +54,13 @@ jobs:
       # no API keys, database URLs, or other secrets — see
       # docs/pasca-development/1-SECURITY-CHECKLIST.md. Nothing to copy onto
       # the VPS beyond the source code itself.
+      #
+      # Idempotent: clones the repo and starts the PM2 process if this is the
+      # first run on a fresh VPS, otherwise just pulls + restarts. Node.js,
+      # PM2, Nginx, Certbot, the Nginx site config, and the TLS cert are NOT
+      # provisioned here — those are one-time, sudo-requiring steps done
+      # manually (docs/pasca-development/2-DEPLOYMENT-GUIDE.md §2-5). The
+      # deploy SSH user intentionally does not need sudo for this script.
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -63,11 +70,20 @@ jobs:
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
             set -e
-            cd ~/mrizqi-portofolio-website
+            REPO_DIR=~/mrizqi-portofolio-website
+            if [ ! -d "$REPO_DIR/.git" ]; then
+              git clone https://github.com/m-rizqi/mrizqi-portofolio-website.git "$REPO_DIR"
+            fi
+            cd "$REPO_DIR"
             git fetch origin main
             git checkout main
             git reset --hard origin/main
             cd source-codes/frontend
             npm install
             npm run build
-            pm2 restart mrizqi-portfolio
+            if pm2 describe mrizqi-portfolio > /dev/null 2>&1; then
+              pm2 restart mrizqi-portfolio
+            else
+              pm2 start npm --name "mrizqi-portfolio" -- start
+              pm2 save
+            fi
