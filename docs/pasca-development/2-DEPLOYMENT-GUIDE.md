@@ -10,11 +10,12 @@
 * **Hosting Provider:** User-managed (not a PaaS like Vercel/Netlify)
 * **Containerization:** None — running Next.js directly via Node.js + PM2 (kept minimal; add Docker later only if you outgrow this)
 * **Web Server / Reverse Proxy:** Nginx, terminating TLS via Certbot (Let's Encrypt)
-* **Domain:** `mrizqi.25hourslab.site` → point this domain's DNS **A record** at the VPS's public IP before requesting a certificate.
+* **Domain:** `mrizqi.25hourslab.site`, a subdomain of `25hourslab.site` managed in **Cloudflare DNS**. Add an **A record** (`mrizqi` → VPS public IP) with the proxy status set to **DNS only (grey cloud)** before requesting a certificate — see §4a.
 
 ```mermaid
 graph LR
-    Visitor -->|HTTPS 443| Nginx
+    Visitor -->|DNS: mrizqi.25hourslab.site| Cloudflare[Cloudflare DNS - grey cloud]
+    Cloudflare -->|HTTPS 443, resolves straight to VPS IP| Nginx
     Nginx -->|HTTP 127.0.0.1:3000| NextApp[Next.js - PM2 managed]
     Certbot -.renews cert for.-> Nginx
 ```
@@ -70,7 +71,23 @@ npm run build
 pm2 restart mrizqi-portfolio
 ```
 
-## 🌐 4. Nginx Reverse Proxy + SSL
+## ☁️ 4. Cloudflare DNS Setup
+
+In the Cloudflare dashboard for `25hourslab.site` → **DNS** → **Records** → **Add record**:
+
+| Field | Value |
+|---|---|
+| Type | `A` |
+| Name | `mrizqi` |
+| IPv4 address | your VPS's public IP |
+| Proxy status | **DNS only** (grey cloud) |
+| TTL | Auto |
+
+**Why "DNS only" and not "Proxied" (orange cloud):** Certbot's `--nginx` plugin below uses the HTTP-01 challenge, which needs Let's Encrypt to reach your origin server directly on port 80 at `mrizqi.25hourslab.site`. With the record proxied, that traffic goes through Cloudflare's edge first — issuance often still works since Cloudflare forwards `/.well-known/acme-challenge/` by default, but DNS-only removes the variable entirely and is simpler to reason about for a low-traffic personal site that doesn't need Cloudflare's CDN/WAF layer.
+
+*(Optional, later)*: once the certificate is issued and the site is confirmed working over HTTPS, you can switch the record to **Proxied** for Cloudflare's CDN/DDoS protection — set Cloudflare's SSL/TLS mode to **Full (strict)** first (Cloudflare validates your origin's Let's Encrypt cert), otherwise visitors can hit redirect loops or cert warnings.
+
+## 🌐 5. Nginx Reverse Proxy + SSL
 
 Create `/etc/nginx/sites-available/mrizqi-portfolio`:
 
@@ -108,11 +125,11 @@ sudo certbot --nginx -d mrizqi.25hourslab.site
 
 Certbot installs a renewal timer automatically (`systemctl status certbot.timer`) — no manual cron needed.
 
-## 🔐 5. Environment & Secrets
+## 🔐 6. Environment & Secrets
 
 * **No `.env` file is required.** This app has no API keys, database URLs, or secrets (see `docs/pasca-development/1-SECURITY-CHECKLIST.md`). Nothing to configure here beyond the app itself.
 
-## 🤖 6. CI/CD — Auto-Deploy on Push to `main`
+## 🤖 7. CI/CD — Auto-Deploy on Push to `main`
 
 `.github/workflows/deploy.yml` runs on push/PR to `main`/`dev`, scoped to changes under `source-codes/frontend/**` (this repo has no other deployable service, so a docs-only or backend-scaffold commit never triggers a build/deploy):
 
@@ -130,7 +147,7 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 
 The deploy step assumes the repo is already cloned at `~/mrizqi-portofolio-website` on the VPS (§3 step 1) and that `pm2 start npm --name "mrizqi-portfolio" -- start` has been run at least once, so `pm2 restart` has a process to target.
 
-## ✅ 7. Post-Deploy Verification
+## ✅ 8. Post-Deploy Verification
 
 * [ ] `https://mrizqi.25hourslab.site/` loads with a valid padlock (TLS).
 * [ ] All 5 routes reachable: `/`, `/projects`, `/project?p=arcibo`, `/blog`, `/post?p=clean-architecture-flutter`.
