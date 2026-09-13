@@ -112,7 +112,25 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 
 * **No `.env` file is required.** This app has no API keys, database URLs, or secrets (see `docs/pasca-development/1-SECURITY-CHECKLIST.md`). Nothing to configure here beyond the app itself.
 
-## ✅ 6. Post-Deploy Verification
+## 🤖 6. CI/CD — Auto-Deploy on Push to `main`
+
+`.github/workflows/deploy.yml` runs on every push/PR to `main`/`dev`:
+
+* **`build` job** (always) — `npm ci && npm run build` in `source-codes/frontend`, catches type/lint/build errors before merge.
+* **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs the same `git pull` → `npm install` → `npm run build` → `pm2 restart mrizqi-portfolio` sequence documented in §3, non-interactively.
+
+**One-time setup — add these as GitHub repo secrets** (`Settings → Secrets and variables → Actions → New repository secret`):
+
+| Secret | Value |
+|---|---|
+| `VPS_HOST` | VPS IP address or hostname |
+| `VPS_USERNAME` | SSH user with permission to `git pull`, run `npm`, and `pm2 restart` in `~/mrizqi-portofolio-website` |
+| `VPS_SSH_KEY` | Private key (PEM) for that user — generate a **dedicated deploy key** (`ssh-keygen -t ed25519 -f deploy_key -N ""`), add `deploy_key.pub` to the VPS user's `~/.ssh/authorized_keys`, and paste the contents of the private `deploy_key` file here. Never reuse your personal SSH key. |
+| `VPS_PORT` | *(optional)* SSH port, defaults to `22` if unset |
+
+The deploy step assumes the repo is already cloned at `~/mrizqi-portofolio-website` on the VPS (§3 step 1) and that `pm2 start npm --name "mrizqi-portfolio" -- start` has been run at least once, so `pm2 restart` has a process to target.
+
+## ✅ 7. Post-Deploy Verification
 
 * [ ] `https://mrizqi.25hourslab.site/` loads with a valid padlock (TLS).
 * [ ] All 5 routes reachable: `/`, `/projects`, `/project?p=arcibo`, `/blog`, `/post?p=clean-architecture-flutter`.

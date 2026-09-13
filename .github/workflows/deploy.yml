@@ -1,0 +1,55 @@
+name: CI/CD - Frontend
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+defaults:
+  run:
+    working-directory: source-codes/frontend
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: source-codes/frontend/package-lock.json
+
+      - run: npm ci
+      - run: npm run build
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            cd ~/mrizqi-portofolio-website
+            git fetch origin main
+            git checkout main
+            git reset --hard origin/main
+            cd source-codes/frontend
+            npm install
+            npm run build
+            pm2 restart mrizqi-portfolio
