@@ -114,7 +114,7 @@ Certbot installs a renewal timer automatically (`systemctl status certbot.timer`
 
 ## 🤖 6. CI/CD — Auto-Deploy on Push to `main`
 
-`.github/workflows/deploy.yml` runs on every push/PR to `main`/`dev`:
+`.github/workflows/deploy.yml` runs on push/PR to `main`/`dev`, scoped to changes under `source-codes/frontend/**` (this repo has no other deployable service, so a docs-only or backend-scaffold commit never triggers a build/deploy):
 
 * **`build` job** (always) — `npm ci && npm run build` in `source-codes/frontend`, catches type/lint/build errors before merge.
 * **`deploy` job** (only on push to `main`, after `build` passes) — SSHes into the VPS via [`appleboy/ssh-action`](https://github.com/appleboy/ssh-action) and runs the same `git pull` → `npm install` → `npm run build` → `pm2 restart mrizqi-portfolio` sequence documented in §3, non-interactively.

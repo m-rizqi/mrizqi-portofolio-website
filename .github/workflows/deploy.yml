@@ -1,17 +1,28 @@
 name: CI/CD - Frontend
 
+# Only fires on changes under source-codes/frontend/** — this repo has no other
+# deployable service (see docs/pra-development/4-ARCHITECTURE.md: no backend,
+# no ai-service, no mobile client), so there is only one job pair here, unlike
+# a multi-service pipeline where each service gets its own path-filtered job.
 on:
   push:
     branches: [main, dev]
+    paths:
+      - "source-codes/frontend/**"
+      - ".github/workflows/deploy.yml"
   pull_request:
     branches: [main, dev]
+    paths:
+      - "source-codes/frontend/**"
 
 defaults:
   run:
     working-directory: source-codes/frontend
 
+# Serialize deploys — two `pm2 restart` runs against the same VPS process would
+# race each other. Mirrors a GitLab `resource_group`.
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: deploy-frontend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -33,9 +44,16 @@ jobs:
   deploy:
     name: Deploy to VPS
     needs: build
+    # Only fires once a commit lands on main (direct push or a merged PR) — not
+    # on pull_request pipelines for feature branches, which would deploy
+    # unreviewed code.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
+      # No .env restore step here (unlike a backend/CMS service): this app has
+      # no API keys, database URLs, or other secrets — see
+      # docs/pasca-development/1-SECURITY-CHECKLIST.md. Nothing to copy onto
+      # the VPS beyond the source code itself.
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
