@@ -14,7 +14,7 @@ export default function BlogExplorer() {
       <div className="page-head">
         <div>
           <span className="eyebrow">Writing</span>
-          <h1>Blog</h1>
+          <h1>Blogs</h1>
           <p>Notes on mobile architecture, backend systems, and AI-assisted automation &mdash; written while building them.</p>
         </div>
         <span className="count">

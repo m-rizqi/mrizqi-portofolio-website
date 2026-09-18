@@ -2,6 +2,7 @@
 
 import { SKILL_GROUPS, type SkillGroup } from "@/lib/data";
 import { useReveal } from "./useReveal";
+import TechIcon from "./TechIcon";
 
 function SkillCard({ group }: { group: SkillGroup }) {
   const ref = useReveal<HTMLDivElement>();
@@ -14,6 +15,7 @@ function SkillCard({ group }: { group: SkillGroup }) {
       <div className="tag-row">
         {group.items.map((item) => (
           <span className="tag" key={item}>
+            <TechIcon name={item} />
             {item}
           </span>
         ))}

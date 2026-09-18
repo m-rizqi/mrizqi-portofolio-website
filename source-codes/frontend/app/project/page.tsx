@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function ProjectDetailPage() {
   return (
     <>
-      <Nav wrapClass="wrap--md" active="projects" />
-      <main className="wrap wrap--md page stack">
+      <Nav active="projects" />
+      <main className="wrap page stack">
         <Link href="/projects" style={{ fontSize: 13, color: "var(--muted)" }}>
           &larr; All projects
         </Link>

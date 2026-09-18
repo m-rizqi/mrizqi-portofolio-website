@@ -12,7 +12,14 @@ export default function ProjectCard({ project }: { project: Project }) {
       className="card card--lift tile-link reveal"
       href={`/project?p=${encodeURIComponent(project.slug)}`}
     >
-      <div className="imgph">{project.title} — drop a screenshot here</div>
+      {project.cover ? (
+        <div className="imgph imgph--thumb">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={project.cover} alt={project.title} />
+        </div>
+      ) : (
+        <div className="imgph">{project.title} — drop a screenshot here</div>
+      )}
       <div className="tile-body">
         <div className="tile-top">
           <span className="cat">{project.category}</span>

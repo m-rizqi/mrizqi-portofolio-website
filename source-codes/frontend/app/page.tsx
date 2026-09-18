@@ -24,9 +24,6 @@ export default function HomePage() {
         <div className="row">
           <Reveal className="card card--lift hero">
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              <span className="badge-live">
-                <i></i>Open to collaborate
-              </span>
               <h1>
                 Muhammad
                 <br />
@@ -46,7 +43,7 @@ export default function HomePage() {
               </a>
             </div>
             <div className="pill-row">
-              <span className="pill pill--solid">Software Engineer</span>
+              <span className="pill">Software Engineer</span>
               <span className="pill">Mobile Developer</span>
               <span className="pill">Full-Stack Developer</span>
             </div>
@@ -58,7 +55,9 @@ export default function HomePage() {
             <div className="scrim"></div>
             <div className="meta">
               <p className="loc">Yogyakarta, Indonesia</p>
-              <p className="sub">Flutter &middot; Spring Boot &middot; Next.js</p>
+              <span className="badge-live badge-live--photo">
+                <i></i>Open to collaborate
+              </span>
             </div>
           </Reveal>
 
@@ -87,14 +86,12 @@ export default function HomePage() {
           <Reveal className="card card--lift about">
             <span className="eyebrow">About</span>
             <p>
-              I work across the stack &mdash; Flutter and Android Native on mobile, Spring Boot
-              microservices on the backend, Next.js and Nuxt.js on the web. Lately a lot of that
-              work has been AI-assisted automation: OCR invoice processing, document validation,
-              and a Telegram bot that triages support tickets.
-            </p>
-            <p>
-              I care about maintainable architecture, system performance, and delivering quality
-              products in Agile teams.
+              Software Engineer with 4+ years of experience developing scalable mobile, backend,
+              and web applications across logistics, ERP, transportation, and enterprise systems.
+              Experienced in Flutter, Android Native, Spring Boot Microservices, Next.js, OCR,
+              AI-powered automation, and cloud-based services such as Firebase. Passionate about
+              building maintainable software architectures, improving system performance, and
+              delivering high-quality products in Agile environments.
             </p>
           </Reveal>
           <Reveal className="card card--lift edu">
@@ -186,7 +183,7 @@ export default function HomePage() {
         {/* BLOG */}
         <div className="section-head" id="blog">
           <h2>Featured blogs</h2>
-          <Link className="section-link" href="/blog">
+          <Link className="section-link" href="/blogs">
             Read all articles &rarr;
           </Link>
         </div>
@@ -220,11 +217,16 @@ export default function HomePage() {
               </span>
               <span className="val">/in/m-rizqi</span>
             </a>
-            <a className="contact-card" href="https://github.com/" target="_blank" rel="noopener">
+            <a
+              className="contact-card"
+              href="https://github.com/m-rizqi"
+              target="_blank"
+              rel="noopener"
+            >
               <span className="lbl">
                 <span>&lt;/&gt;</span>GitHub
               </span>
-              <span className="val">add your username</span>
+              <span className="val">/m-rizqi</span>
             </a>
             <a className="contact-card" href="tel:+62895377280328">
               <span className="lbl">

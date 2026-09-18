@@ -1,0 +1,41 @@
+import type { Post } from "../data";
+
+const addingSplashScreenInAndroidApp: Post = {
+  slug: "adding-splash-screen-in-android-app",
+  title: "Adding Splash Screen In Android App",
+  tag: "Android",
+  date: "Jan 2023",
+  readTime: "3 min read",
+  excerpt: "What happens when we click the icon of an app on our phone? Of course, the app will immediately show their actual first screen. It can be OnBoarding, Dashboard, or anything else. There is an amount of time to load the first screen when you open the app. Technically, the length of time is different between phones based on its spec. Commonly, to make our app shows amazingly, we can add action along that time. It’s called Splash Screen.",
+  cover: "/assets/blog/adding-splash-screen-in-android-app/img-1.gif",
+  link: "https://medium.com/@mrizqi070502/adding-splash-screen-in-android-app-8446e236f4f5",
+  body: [
+    { type: "paragraph", text: "What happens when we click the icon of an app on our phone? Of course, the app will immediately show their actual first screen. It can be OnBoarding, Dashboard, or anything else. There is an amount of time to load the first screen when you open the app. Technically, the length of time is different between phones based on its spec. Commonly, to make our app shows amazingly, we can add action along that time. It’s called Splash Screen." },
+    { type: "paragraph", text: "Basically, the android system will show a blank screen(black or white color on the entire screen) for the default splash screen of our app. But, don’t worry, we can change it ourselves." },
+    { type: "image", src: "/assets/blog/adding-splash-screen-in-android-app/img-1.gif" },
+    { type: "paragraph", text: "Blank screen when open an app" },
+    { type: "paragraph", text: "Intuitively, we can create the splash screen by creating an activity and creating the layout then do some logic to wait for a certain time. But, in my experience, that doesn’t solve the blank screen when the android system loads the app. You can still do that if you want to have a beautiful splash screen with complex animation and logic. So, in this post, I will do that without extra activity." },
+    { type: "heading", text: "Create Splash Screen Drawable" },
+    { type: "paragraph", text: "There is an attribute in themes called **android:windowBackground** that can be used to change the background of the entire app screen. You can see that the root background of the activity is transparent. We will use that attribute to place our splash screen drawable. But first, let’s create the drawable." },
+    { type: "paragraph", text: "Create a new drawable resource file in the drawable directory then make the root tag **layer-list**. We will add two **item** tags. First for the entire background screen. Second, for the icon." },
+    { type: "paragraph", text: "Let’s create the splash screen background. I use **shape** tag and inside that, I just add a solid tag with a color attribute." },
+    { type: "code", code: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<shape xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <solid android:color=\"#6E18A3\"/>\n</shape>" },
+    { type: "paragraph", text: "Next, create the splash screen drawable" },
+    { type: "code", code: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<layer-list xmlns:android=\"http://schemas.android.com/apk/res/android\">\n    <item android:drawable=\"@drawable/splash_screen_background\"/>  // Background that i made before\n    <item\n        android:drawable=\"@drawable/app_icon\" // Icon\n        android:gravity=\"center\"\n        />\n</layer-list>" },
+    { type: "heading", text: "Customize Theme" },
+    { type: "paragraph", text: "Now, let’s move to the themes.xml file. As I mentioned before, we add **android:windowBackground** attribute to our style." },
+    { type: "code", code: "<style name=\"Theme.SplashScreen\" parent=\"Theme.MaterialComponents.DayNight.DarkActionBar\">\n        <!-- Primary brand color. -->\n        <item name=\"colorPrimary\">@color/purple_500</item>\n        <item name=\"colorPrimaryVariant\">@color/purple_700</item>\n        <item name=\"colorOnPrimary\">@color/white</item>\n        <!-- Secondary brand color. -->\n        <item name=\"colorSecondary\">@color/teal_200</item>\n        <item name=\"colorSecondaryVariant\">@color/teal_700</item>\n        <item name=\"colorOnSecondary\">@color/black</item>\n        <!-- Status bar color. -->\n        <item name=\"android:statusBarColor\">?attr/colorPrimaryVariant</item>\n        <!-- Customize your theme here. -->\n        <item name=\"android:windowBackground\">@drawable/splash_screen</item>\n    </style>" },
+    { type: "paragraph", text: "And, we did it. Run the app and watch carefully when the app opens. You will get the app to show the splash screen after you click the app." },
+    { type: "image", src: "/assets/blog/adding-splash-screen-in-android-app/img-2.gif" },
+    { type: "paragraph", text: "Splash screen" },
+    { type: "paragraph", text: "Look nice right? But we got a problem. Because we use windowBackground, the splash screen background will visible in the entire app screen if the activity layout has transparent root background. We don’t want that. We want to show the window background base on the default of the android system. If light mode it’s white and if dark mode it’s black. How to solve that?" },
+    { type: "paragraph", text: "Well, you can create a default style in your themes and put it as an application theme in androidManifest.xml. Then you create the splash screen theme and put it in your main or first activity." },
+    { type: "code", code: "<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\">\n\n    <application\n        android:allowBackup=\"true\"\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\n        android:fullBackupContent=\"@xml/backup_rules\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.AppName\"\n        tools:targetApi=\"31\">\n        <activity\n            android:name=\".MainActivity\"\n            android:exported=\"true\"\n            android:theme=\"@style/Theme.AppName.SplashScreen\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n\n            <meta-data\n                android:name=\"android.app.lib_name\"\n                android:value=\"\" />\n        </activity>\n    </application>\n\n</manifest>" },
+    { type: "image", src: "/assets/blog/adding-splash-screen-in-android-app/img-3.gif" },
+    { type: "paragraph", text: "Implement splash screen for just one activity" },
+    { type: "paragraph", text: "What I give in this post maybe is not a good solution. There is already Splash Screen API from Android itself and it’s more powerful. You can add an animated icon, duration, branding image, splash screen behavior, and many more. [**Here is the doc**](https://developer.android.com/develop/ui/views/launch/splash-screen). ****But, that API is for Android version 12 or higher. So, for the lower version, you can still create a splash screen. One of the ways is as I said." },
+    { type: "paragraph", text: "Thanks for supporting me. If you find this helpful share it with your friend. If there are mistakes that I made, suggestions or advice, please leave a comment or message me. I will appreciate that. See ya👋" },
+  ],
+};
+
+export default addingSplashScreenInAndroidApp;

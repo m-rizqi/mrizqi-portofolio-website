@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 export default function PostDetailPage() {
   return (
     <>
-      <Nav wrapClass="wrap--sm" active="blog" />
-      <main className="wrap wrap--sm page stack">
-        <Link href="/blog" style={{ fontSize: 13, color: "var(--muted)" }}>
+      <Nav active="blogs" />
+      <main className="wrap page stack">
+        <Link href="/blogs" style={{ fontSize: 13, color: "var(--muted)" }}>
           &larr; All articles
         </Link>
         <PostDetail />
-        <Footer backHref="/blog" backLabel="All articles" />
+        <Footer backHref="/blogs" backLabel="All articles" />
       </main>
     </>
   );

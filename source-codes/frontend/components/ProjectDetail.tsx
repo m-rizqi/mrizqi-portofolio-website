@@ -4,6 +4,8 @@ import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Reveal from "./Reveal";
 import PrevNextNav from "./PrevNextNav";
+import ZoomableImage from "./ZoomableImage";
+import TechIcon from "./TechIcon";
 import { PROJECTS } from "@/lib/data";
 
 function ProjectDetailContent() {
@@ -40,6 +42,11 @@ function ProjectDetailContent() {
                 Open project &#8599;
               </a>
             ) : null}
+            {project.repoLink ? (
+              <a className="btn btn-ghost" href={project.repoLink} target="_blank" rel="noopener">
+                View source &#8599;
+              </a>
+            ) : null}
             <a className="btn btn-ghost" href="mailto:mrizqi070502@gmail.com">
               Ask about this work
             </a>
@@ -62,6 +69,7 @@ function ProjectDetailContent() {
             <div className="tag-row">
               {project.stack.map((s) => (
                 <span className="tag" key={s}>
+                  <TechIcon name={s} />
                   {s}
                 </span>
               ))}
@@ -70,8 +78,35 @@ function ProjectDetailContent() {
         </div>
       </div>
 
+      {project.goal || project.problem ? (
+        <div className="row">
+          {project.goal ? (
+            <Reveal className="card card--dark card--pad" style={{ flex: "1 1 320px", minWidth: 260 }}>
+              <span className="eyebrow">Goal</span>
+              <p style={{ marginTop: 14, fontSize: 16, lineHeight: 1.6, color: "rgba(255,255,255,.92)" }}>
+                {project.goal}
+              </p>
+            </Reveal>
+          ) : null}
+          {project.problem ? (
+            <Reveal className="card card--lift card--pad" style={{ flex: "1.6 1 380px", minWidth: 260 }}>
+              <span className="eyebrow">The problem</span>
+              <p style={{ marginTop: 14, fontSize: 16, lineHeight: 1.6, color: "var(--text)" }}>
+                {project.problem}
+              </p>
+            </Reveal>
+          ) : null}
+        </div>
+      ) : null}
+
       <Reveal className="card" style={{ padding: 14 }}>
-        <div className="imgph imgph--tall">Main screenshot / cover for this project</div>
+        {project.cover ? (
+          <div className="imgph imgph--tall imgph--photo">
+            <ZoomableImage src={project.cover} alt={`${project.title} cover`} />
+          </div>
+        ) : (
+          <div className="imgph imgph--tall">Main screenshot / cover for this project</div>
+        )}
       </Reveal>
 
       <div className="row">
@@ -87,16 +122,91 @@ function ProjectDetailContent() {
           </div>
         </Reveal>
         <div className="side-col">
-          <Reveal className="card" style={{ padding: 14 }}>
-            <div className="imgph imgph--mid">Detail shot 1</div>
-          </Reveal>
-          <Reveal className="card" style={{ padding: 14 }}>
-            <div className="imgph imgph--mid">Detail shot 2</div>
-          </Reveal>
+          {[0, 1].map((idx) =>
+            project.gallery?.[idx] ? (
+              <Reveal className="card" style={{ padding: 14 }} key={project.gallery[idx]}>
+                <div className="imgph imgph--mid imgph--photo">
+                  <ZoomableImage src={project.gallery[idx]} alt={`${project.title} screenshot ${idx + 1}`} />
+                </div>
+              </Reveal>
+            ) : (
+              <Reveal className="card" style={{ padding: 14 }} key={`placeholder-${idx}`}>
+                <div className="imgph imgph--mid">Detail shot {idx + 1}</div>
+              </Reveal>
+            )
+          )}
         </div>
       </div>
 
-      <PrevNextNav basePath="/project" prev={prev} next={next} />
+      {project.process?.length || project.features?.length ? (
+        <div className="row">
+          <Reveal className="card card--pad" style={{ flex: "1.4 1 420px", minWidth: 280 }}>
+            <span className="eyebrow">How it was built</span>
+            {project.process?.map((p) => (
+              <p key={p} style={{ marginTop: 14, fontSize: 15, lineHeight: 1.65, color: "var(--text)" }}>
+                {p}
+              </p>
+            ))}
+            {project.features?.length ? (
+              <div className="acc" style={{ gap: 2, marginTop: 8 }}>
+                {project.features.map((f) => (
+                  <div key={f} className="bullet" style={{ padding: "10px 0" }}>
+                    <i></i>
+                    <p style={{ fontSize: 15, color: "var(--body)" }}>{f}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </Reveal>
+          {project.brand || project.sitemap ? (
+            <div className="side-col">
+              {project.brand ? (
+                <Reveal
+                  className="card card--pad"
+                  style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}
+                >
+                  <span className="eyebrow">Brand</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={project.brand.logo}
+                    alt={`${project.title} logo`}
+                    style={{ width: 88, height: 88, borderRadius: 22, objectFit: "cover" }}
+                  />
+                  <div className="tag-row">
+                    {project.brand.colors.map((hex) => (
+                      <span
+                        key={hex}
+                        className="tag tag--sm"
+                        style={{ background: hex, color: "#fff", borderColor: hex }}
+                      >
+                        {hex}
+                      </span>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: 13, color: "var(--muted)" }}>{project.brand.fonts.join(" · ")}</p>
+                </Reveal>
+              ) : null}
+              {project.sitemap ? (
+                <Reveal className="card" style={{ padding: 14 }}>
+                  <div className="imgph imgph--mid imgph--photo">
+                    <ZoomableImage src={project.sitemap} alt={`${project.title} sitemap`} />
+                  </div>
+                </Reveal>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {project.gallery?.slice(2).map((src, idx) => (
+        <Reveal className="card" style={{ padding: 14 }} key={src}>
+          <div className="imgph imgph--wide imgph--photo">
+            <ZoomableImage src={src} alt={`${project.title} screenshot ${idx + 3}`} />
+          </div>
+        </Reveal>
+      ))}
+
+      {PROJECTS.length > 1 ? <PrevNextNav basePath="/project" prev={prev} next={next} /> : null}
     </div>
   );
 }

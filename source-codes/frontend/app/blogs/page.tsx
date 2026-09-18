@@ -4,14 +4,14 @@ import Footer from "@/components/Footer";
 import BlogExplorer from "@/components/BlogExplorer";
 
 export const metadata: Metadata = {
-  title: "Blog — Muhammad Rizqi",
+  title: "Blogs — Muhammad Rizqi",
 };
 
 export default function BlogPage() {
   return (
     <>
-      <Nav wrapClass="wrap--md" active="blog" />
-      <main className="wrap wrap--md page stack">
+      <Nav active="blogs" />
+      <main className="wrap page stack">
         <BlogExplorer />
         <Footer backHref="/" backLabel="Back to home" />
       </main>

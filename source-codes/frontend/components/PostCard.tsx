@@ -12,9 +12,14 @@ export default function PostCard({ post }: { post: Post }) {
       className="card card--lift tile-link reveal"
       href={`/post?p=${encodeURIComponent(post.slug)}`}
     >
-      <div className="imgph" style={{ height: 170 }}>
-        Cover image for this article
-      </div>
+      {post.cover ? (
+        <div className="imgph imgph--thumb">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={post.cover} alt={post.title} />
+        </div>
+      ) : (
+        <div className="imgph imgph--thumb">Cover image for this article</div>
+      )}
       <div className="tile-body">
         <div className="tile-top">
           <span className="cat">{post.tag}</span>

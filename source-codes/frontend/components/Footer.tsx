@@ -10,11 +10,7 @@ export default function Footer({
   return (
     <div className="footer">
       <span>&copy; 2026 Muhammad Rizqi</span>
-      {backHref ? (
-        <Link href={backHref}>&larr; {backLabel}</Link>
-      ) : (
-        <span>Plus Jakarta Sans &amp; DM Sans</span>
-      )}
+      {backHref ? <Link href={backHref}>&larr; {backLabel}</Link> : null}
     </div>
   );
 }
