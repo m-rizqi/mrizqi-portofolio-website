@@ -38,7 +38,7 @@ export default function HomePage() {
               <a className="btn btn-primary" href="/assets/CV_Muhammad_Rizqi.pdf" download>
                 <span>&#8595;</span>Download CV
               </a>
-              <a className="btn btn-ghost" href="/assets/CV_Muhammad_Rizqi.pdf" download>
+              <a className="btn btn-ghost" href="/assets/Portofolio_Muhammad_Rizqi.pdf" download>
                 <span>&#8595;</span>Download portfolio
               </a>
             </div>
