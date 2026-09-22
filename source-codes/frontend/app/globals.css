@@ -42,7 +42,8 @@ p{margin:0;text-wrap:pretty}
   box-shadow:0 2px 4px rgba(20,39,78,.04),0 18px 40px -28px rgba(20,39,78,.3)}
 .brand{display:flex;align-items:center;gap:12px;color:var(--ink)}
 .brand span.mark{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:13px;
-  background:var(--navy);color:#fff;font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:14px}
+  background:var(--navy);color:#fff;font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:14px;overflow:hidden}
+.brand span.mark img{width:100%;height:100%;object-fit:cover}
 .brand span.name{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink)}
 .nav-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .nav-links a{padding:9px 15px;border-radius:var(--r-pill);font-size:14px;font-weight:500;color:var(--body);transition:background .3s,color .3s}

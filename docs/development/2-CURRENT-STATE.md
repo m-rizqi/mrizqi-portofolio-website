@@ -3,8 +3,8 @@
 ---
 
 ## 🕒 1. Last Update Context
-* **Date & Time:** 2026-09-13
-* **Last Active Agent/Session Focus:** Full Next.js/React port of the static design (`docs/design/mrizqi-portofolio-design/`) into `source-codes/frontend/`, plus locking `docs/pra-development/*`.
+* **Date & Time:** 2026-09-22
+* **Last Active Agent/Session Focus:** Content update — added two 25Hours Lab projects as new portfolio entries: "MasjidHub" (mosque-management SaaS, co-founded with a friend) and "NontonKilat" (AI YouTube tutorial comparator, built solo end to end).
 * **Current Git Branch:** `main`
 
 ---
@@ -32,6 +32,9 @@
   * `docs/development/1-TASK-CHECKLIST.md` — updated to reflect actual work done.
 * **Work In Progress (WIP):**
   * None — MVP scope from the PRD is complete. `docs/pasca-development/*` not yet started (gated on user confirming development is done, per that folder's own README).
+* **Content additions (post-MVP):**
+  * Added `lib/projects/masjidhub.ts` (6th project entry) — sourced from the sibling `D:\Bisnis\MasjidHub` repo (PRD/BRD, design system doc, real screenshots). Added a new `"Web"` category to `CATEGORIES` in `lib/data.ts` since it's a full-stack web SaaS, not Mobile/Data. Assets copied into `public/assets/projects/masjidhub/` (cover + 5 gallery shots + logo). No live public deploy exists yet for MasjidHub itself, so `link` points at `https://25hourslab.site` (the software house's own live site, which already features MasjidHub as a product) rather than the private GitLab repo or the staging IP — `repoLink` omitted since both MasjidHub repos are private. Verified with `tsc --noEmit`, `npm run build`, and an in-browser check (project card, detail page, and the new Web filter all render correctly).
+  * Added `lib/projects/nontonkilat.ts` (7th project entry, listed first) — sourced from the sibling `D:\Bisnis\NontonKilat\nonton-kilat` repo (BRD/PRD, tech-debt log, design system doc) plus Chrome Web Store submission assets and a live dashboard screenshot. Reused the `"Web"` category rather than adding a new one for the Chrome extension (judgment call — flag to the user if a dedicated "Extension" category is wanted later). Assets copied into `public/assets/projects/nontonkilat/`. This one *is* live and public — confirmed via the real landing page (`https://nontonkilat.25hourslab.site`) that it's published on the Chrome Web Store, so `link` points straight at the Web Store listing (same pattern as the mobile projects linking to Play Store) instead of the landing page. `repoLink` omitted (private GitLab repo, same call as MasjidHub). Verified with `tsc --noEmit`, `npm run build`, and an in-browser check.
 
 ---
 

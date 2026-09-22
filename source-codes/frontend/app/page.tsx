@@ -8,7 +8,7 @@ import ProjectCard from "@/components/ProjectCard";
 import PostCard from "@/components/PostCard";
 import { PROJECTS, POSTS } from "@/lib/data";
 
-const FEATURED_PROJECT_SLUGS = ["arcibo", "mahezza", "toko-management"];
+const FEATURED_PROJECT_SLUGS = ["nontonkilat", "masjidhub", "arcibo"];
 
 export default function HomePage() {
   const featuredProjects = FEATURED_PROJECT_SLUGS.map((slug) =>

@@ -13,7 +13,10 @@ export default function Nav({ active = null }: { active?: NavActive }) {
     <nav className="nav wrap">
       <div className="nav-inner">
         <Link className="brand" href="/" onClick={close}>
-          <span className="mark">MR</span>
+          <span className="mark">
+            {/* eslint-disable-next-line @next/next/no-img-element -- exact-fidelity portrait crop, matches other <img> usages in this codebase */}
+            <img src="/assets/photo.jpg" alt="Muhammad Rizqi" />
+          </span>
           <span className="name">Muhammad Rizqi</span>
         </Link>
         <button

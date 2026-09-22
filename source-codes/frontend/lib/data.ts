@@ -60,7 +60,7 @@ export type SkillGroup = {
 
 export { PROJECTS } from "./projects";
 
-export const CATEGORIES: string[] = ["All", "Mobile", "Data"];
+export const CATEGORIES: string[] = ["All", "Mobile", "Data", "Web"];
 
 export { POSTS } from "./blogs";
 
